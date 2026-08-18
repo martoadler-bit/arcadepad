@@ -1,0 +1,110 @@
+:root {
+  --cabinet-bg: #120f1a;
+  --marquee: #ff0d6b;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--cabinet-bg);
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100%;
+}
+
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+h1 {
+  font-family: "SF Mono", "Menlo", monospace;
+  font-weight: 900;
+  font-size: 1.6rem;
+  color: var(--marquee);
+  text-shadow: 0 0 12px rgba(255, 13, 107, 0.6);
+  text-align: center;
+  margin: 0 0 4px;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0 0 32px;
+}
+
+.grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(var(--cols, 4), 1fr);
+}
+
+.pad {
+  position: relative;
+  aspect-ratio: 1.1;
+  border-radius: 14px;
+  border: 3px solid rgba(0, 0, 0, 0.55);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.08s ease-out, filter 0.08s ease-out;
+  font-family: "SF Mono", "Menlo", monospace;
+}
+
+.pad:active,
+.pad.playing {
+  transform: scale(0.96) translateY(2px);
+  filter: brightness(0.9);
+}
+
+.pad .name {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.75);
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pad .index {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.pad .mode {
+  position: absolute;
+  bottom: 6px;
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.55);
+  letter-spacing: 0.05em;
+}
+
+.state {
+  text-align: center;
+  padding: 60px 20px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.footer-note {
+  text-align: center;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.35);
+  margin-top: 40px;
+}
