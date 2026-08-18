@@ -162,7 +162,7 @@
 		F70E032484A048F6EAF5F337 /* crash.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = crash.mp3; sourceTree = "<group>"; };
 		F73353312EEF24D1F17D11FC /* Pad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pad.swift; sourceTree = "<group>"; };
 		FA4833BA3B77DCF7175F2406 /* hihat_open.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = hihat_open.mp3; sourceTree = "<group>"; };
-		FB4EFF13118749E130300C30 /* ArcadePad.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ArcadePad.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB4EFF13118749E130300C30 /* ArcadePad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArcadePad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBE1FC00FC2D239637EDE077 /* coin.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = coin.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -464,7 +464,6 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					456876E5C1DE35EB19A3F1AA = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 					A7641AF358B5D14356EF4694 = {
@@ -782,6 +781,7 @@
 				CODE_SIGN_ENTITLEMENTS = ArcadePad/ArcadePad.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_ASSET_PATHS = "\"ArcadePad/Preview Content\"";
+				DEVELOPMENT_TEAM = 228T6U2RV4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Generated-Info.plist";
@@ -830,6 +830,7 @@
 				CODE_SIGN_ENTITLEMENTS = ArcadePad/ArcadePad.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_ASSET_PATHS = "\"ArcadePad/Preview Content\"";
+				DEVELOPMENT_TEAM = 228T6U2RV4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Generated-Info.plist";

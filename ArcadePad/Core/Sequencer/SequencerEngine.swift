@@ -22,12 +22,17 @@ final class SequencerEngine: ObservableObject {
         t.schedule(deadline: .now(), repeating: secondsPerStep)
         t.setEventHandler { [weak self] in
             guard let self else { return }
-            let step = self.currentStep
-            let swungDelay = (step % 2 == 1) ? pattern.swing * secondsPerStep * 0.5 : 0
-            DispatchQueue.main.asyncAfter(deadline: .now() + swungDelay) {
-                self.onStep?(step)
+            // @Published properties must only be mutated on main — this handler runs on the
+            // timer's background queue, which is what triggered SwiftUI's "Publishing changes
+            // from background threads" warning.
+            DispatchQueue.main.async {
+                let step = self.currentStep
+                let swungDelay = (step % 2 == 1) ? pattern.swing * secondsPerStep * 0.5 : 0
+                DispatchQueue.main.asyncAfter(deadline: .now() + swungDelay) {
+                    self.onStep?(step)
+                }
+                self.currentStep = (step + 1) % pattern.stepCount
             }
-            self.currentStep = (step + 1) % pattern.stepCount
         }
         t.resume()
         timer = t
