@@ -172,11 +172,50 @@ final class ShareService {
         }
         if let conversionError { throw conversionError }
 
-        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID().uuidString).wav")
-        defer { try? FileManager.default.removeItem(at: tempURL) }
-        let outFile = try AVAudioFile(forWriting: tempURL, settings: wavFormat.settings, commonFormat: .pcmFormatInt16, interleaved: true)
-        try outFile.write(from: convertedBuffer)
-        return try Data(contentsOf: tempURL)
+        return Self.canonicalWAVData(from: convertedBuffer)
+    }
+
+    /// Hand-rolled minimal 44-byte-header WAV (format tag 1 = plain PCM). AVAudioFile's own
+    /// WAV writer can emit a WAVE_FORMAT_EXTENSIBLE fmt chunk (common for mono files), which
+    /// desktop Chrome's decodeAudioData tolerates but real iOS Safari rejects outright with
+    /// "Decoding failed". A canonical header sidesteps that entirely.
+    private static func canonicalWAVData(from buffer: AVAudioPCMBuffer) -> Data {
+        let channelCount = Int(buffer.format.channelCount)
+        let sampleRate = UInt32(buffer.format.sampleRate)
+        let frameLength = Int(buffer.frameLength)
+        let bitsPerSample: UInt16 = 16
+        let blockAlign = UInt16(channelCount * Int(bitsPerSample) / 8)
+        let byteRate = sampleRate * UInt32(blockAlign)
+        let dataSize = UInt32(frameLength * channelCount * Int(bitsPerSample) / 8)
+
+        var data = Data()
+        func append(_ string: String) { data.append(string.data(using: .ascii)!) }
+        func append(_ value: UInt32) { withUnsafeBytes(of: value.littleEndian) { data.append(contentsOf: $0) } }
+        func append(_ value: UInt16) { withUnsafeBytes(of: value.littleEndian) { data.append(contentsOf: $0) } }
+
+        append("RIFF")
+        append(UInt32(36 + dataSize))
+        append("WAVE")
+        append("fmt ")
+        append(UInt32(16))  // fmt chunk size
+        append(UInt16(1))   // audio format = 1 (plain PCM, never Extensible)
+        append(UInt16(channelCount))
+        append(sampleRate)
+        append(byteRate)
+        append(blockAlign)
+        append(bitsPerSample)
+        append("data")
+        append(dataSize)
+
+        // For an interleaved buffer, AVAudioPCMBuffer already stores all channels' samples
+        // together in channelData[0] — no manual interleaving needed.
+        if let channelData = buffer.int16ChannelData {
+            let totalSamples = frameLength * channelCount
+            let samples = UnsafeBufferPointer(start: channelData[0], count: totalSamples)
+            samples.withMemoryRebound(to: UInt8.self) { data.append(Data($0)) }
+        }
+
+        return data
     }
 }
 
