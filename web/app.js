@@ -1,6 +1,28 @@
 const PAD_COLORS = ["#FF3333", "#FF8C0D", "#FFD90D", "#26D959", "#1ABFF2", "#BF40FF"];
 const COLUMNS_BY_GRID_SIZE = { 4: 2, 8: 4, 12: 4, 16: 4 };
 
+// On-screen debug log — lets us see what's happening on a phone without plugging it into a
+// Mac for remote Web Inspector. Remove once mobile playback is confirmed reliable.
+function debugLog(msg) {
+  let el = document.getElementById("debug-log");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "debug-log";
+    el.style.cssText =
+      "position:fixed;bottom:0;left:0;right:0;max-height:35vh;overflow:auto;" +
+      "background:rgba(0,0,0,0.88);color:#7CFC00;font:10px/1.4 monospace;" +
+      "padding:8px;white-space:pre-wrap;z-index:9999;";
+    document.body.appendChild(el);
+  }
+  const line = document.createElement("div");
+  line.textContent = `${new Date().toISOString().slice(11, 19)} ${msg}`;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+}
+
+window.addEventListener("error", (e) => debugLog(`window.onerror: ${e.message}`));
+window.addEventListener("unhandledrejection", (e) => debugLog(`unhandled promise rejection: ${e.reason}`));
+
 function publicDownloadURL(path) {
   const encoded = path.split("/").map(encodeURIComponent).join("/");
   return `${SUPABASE_PROJECT_URL}/storage/v1/object/public/share/${encoded}`;
@@ -30,20 +52,26 @@ class KitPlayer {
   /// before any async work, so the context is already running by the time playback starts.
   unlockSync() {
     const ctx = this.ensureContext();
+    debugLog(`unlockSync: state before = ${ctx.state}`);
     if (ctx.state === "suspended") ctx.resume();
     const silent = ctx.createBuffer(1, 1, ctx.sampleRate);
     const source = ctx.createBufferSource();
     source.buffer = silent;
     source.connect(ctx.destination);
     source.start(0);
+    debugLog(`unlockSync: state after = ${ctx.state}`);
     return ctx;
   }
 
   async loadPad(pad) {
     const ctx = this.ensureContext();
+    debugLog(`loadPad ${pad.index}: fetching ${pad.audioURL}`);
     const response = await fetch(pad.audioURL);
+    debugLog(`loadPad ${pad.index}: fetch status ${response.status}`);
     const arrayBuffer = await response.arrayBuffer();
+    debugLog(`loadPad ${pad.index}: got ${arrayBuffer.byteLength} bytes, decoding…`);
     const forward = await ctx.decodeAudioData(arrayBuffer);
+    debugLog(`loadPad ${pad.index}: decoded, duration ${forward.duration.toFixed(2)}s`);
     this.buffers.set(pad.index, { forward, reversed: null });
   }
 
@@ -62,10 +90,14 @@ class KitPlayer {
 
   play(pad) {
     const ctx = this.ensureContext();
+    debugLog(`play ${pad.index}: ctx.state = ${ctx.state}`);
     if (ctx.state === "suspended") ctx.resume();
 
     const entry = this.buffers.get(pad.index);
-    if (!entry) return;
+    if (!entry) {
+      debugLog(`play ${pad.index}: no buffer loaded yet!`);
+      return;
+    }
 
     this.stop(pad.index);
 
@@ -99,6 +131,7 @@ class KitPlayer {
     }
 
     this.activeSources.set(pad.index, source);
+    debugLog(`play ${pad.index}: source.start() called, ctx.currentTime=${ctx.currentTime.toFixed(2)}`);
     source.onended = () => {
       if (this.activeSources.get(pad.index) === source) {
         this.activeSources.delete(pad.index);
@@ -182,6 +215,7 @@ async function main() {
           try {
             await player.loadPad(pad);
           } catch (err) {
+            debugLog(`loadPad ${pad.index} FAILED: ${err.message || err}`);
             loaded = false;
             return;
           }
