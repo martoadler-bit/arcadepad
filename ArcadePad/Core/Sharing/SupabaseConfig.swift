@@ -4,8 +4,8 @@ import Foundation
 /// client apps (it's not a secret — access is controlled by Storage/RLS policies on the
 /// `share` bucket), so it's fine as a plain constant rather than a bundled plist.
 enum SupabaseConfig {
-    static let projectURL = "REPLACE_WITH_SUPABASE_PROJECT_URL"
-    static let anonKey = "REPLACE_WITH_SUPABASE_ANON_KEY"
+    static let projectURL = "https://beswmaogyjtbymgwgyft.supabase.co"
+    static let anonKey = "sb_publishable_2gTWVmmQdRtFdzaC0qZCow_LIohEg9q"
 
     static var isConfigured: Bool {
         !projectURL.hasPrefix("REPLACE_") && !anonKey.hasPrefix("REPLACE_")

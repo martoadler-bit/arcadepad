@@ -16,6 +16,7 @@
 		3D0F7D583494F9B7748D1791 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4320BC2642058FA597FD979 /* Assets.xcassets */; };
 		417DEE8CB5B36CC831ED4220 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1876A409670D512414A0E2E /* Theme.swift */; };
 		4421B244BBD6911DD2509768 /* ArcadePadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825738DD05B125726B35F186 /* ArcadePadTests.swift */; };
+		54DEA171F28E2AAC3FE9C89D /* SupabaseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40EE8DF1B5889619A7EB3A0 /* SupabaseConfig.swift */; };
 		57CCD90C0DE11066BB0B4AAE /* Kit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FB4592FEC8426F4196B25A /* Kit.swift */; };
 		58380C82A15E2273C4C26E81 /* RecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BBCECD12C1188C50A4AD84 /* RecordView.swift */; };
 		5BB1EFCFCB2BA110C0C05A95 /* ArcadePadUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5825C330D1D18FAA940579FC /* ArcadePadUITests.swift */; };
@@ -24,7 +25,6 @@
 		76F488FCB46175C21AC2D7A0 /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16348602297F3A9ECD5FDEBE /* WaveformView.swift */; };
 		85A11F2D7B0B87099AA3CB34 /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39839F0CFA3AF013E51046F9 /* Sample.swift */; };
 		8F3489C186FC8EC8BC60387B /* PadButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9004B69246E160A7E58BFC /* PadButtonView.swift */; };
-		A25F3518ECB106D0B15318B3 /* FirebaseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D81757468ED03EDB99C1E6 /* FirebaseConfig.swift */; };
 		C205FC13366999957B4AD998 /* WaveformLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69B7BAA0E58E1491ACC295A /* WaveformLoader.swift */; };
 		C73BC0B3C0067331FFE9D033 /* ArcadePadApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8F06981EA38414FF2D0740 /* ArcadePadApp.swift */; };
 		C977A85CC11A8FD1E1582F3B /* PadGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B37809345BDFCADF50FECC /* PadGridView.swift */; };
@@ -52,7 +52,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		08D81757468ED03EDB99C1E6 /* FirebaseConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConfig.swift; sourceTree = "<group>"; };
 		09083D948B13ABF58A3EFE17 /* ShareKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareKitView.swift; sourceTree = "<group>"; };
 		0C505A7ADE905751F28EE583 /* AudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngine.swift; sourceTree = "<group>"; };
 		16348602297F3A9ECD5FDEBE /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
@@ -74,6 +73,7 @@
 		B2BBCECD12C1188C50A4AD84 /* RecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordView.swift; sourceTree = "<group>"; };
 		C69B7BAA0E58E1491ACC295A /* WaveformLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformLoader.swift; sourceTree = "<group>"; };
 		DA9004B69246E160A7E58BFC /* PadButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadButtonView.swift; sourceTree = "<group>"; };
+		E40EE8DF1B5889619A7EB3A0 /* SupabaseConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseConfig.swift; sourceTree = "<group>"; };
 		E7C9A97892BB291BD77A2825 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E9B37809345BDFCADF50FECC /* PadGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadGridView.swift; sourceTree = "<group>"; };
 		F1876A409670D512414A0E2E /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -95,9 +95,9 @@
 		072C388269655EDBA590B746 /* Sharing */ = {
 			isa = PBXGroup;
 			children = (
-				08D81757468ED03EDB99C1E6 /* FirebaseConfig.swift */,
 				86FD1C41AF0D4996AD18A47E /* SharedKitManifest.swift */,
 				42B28CB88B6A0AB5023D278B /* ShareService.swift */,
+				E40EE8DF1B5889619A7EB3A0 /* SupabaseConfig.swift */,
 			);
 			path = Sharing;
 			sourceTree = "<group>";
@@ -359,7 +359,6 @@
 				C73BC0B3C0067331FFE9D033 /* ArcadePadApp.swift in Sources */,
 				F4433CA0722C704CA3FEF865 /* AudioEngine.swift in Sources */,
 				E9BF6D505D60E61BFAB4C6AA /* ContentView.swift in Sources */,
-				A25F3518ECB106D0B15318B3 /* FirebaseConfig.swift in Sources */,
 				57CCD90C0DE11066BB0B4AAE /* Kit.swift in Sources */,
 				2918B441C5D58E803809CC6F /* KitStore.swift in Sources */,
 				6B9B1244CC7554B814B6C0E6 /* Pad.swift in Sources */,
@@ -374,6 +373,7 @@
 				1CDC8EBAC67A339912CB549A /* ShareKitView.swift in Sources */,
 				D1A68A95C6BF629F52C12FDF /* ShareService.swift in Sources */,
 				5DCA62258630D8522DB59C13 /* SharedKitManifest.swift in Sources */,
+				54DEA171F28E2AAC3FE9C89D /* SupabaseConfig.swift in Sources */,
 				417DEE8CB5B36CC831ED4220 /* Theme.swift in Sources */,
 				C205FC13366999957B4AD998 /* WaveformLoader.swift in Sources */,
 				76F488FCB46175C21AC2D7A0 /* WaveformView.swift in Sources */,
