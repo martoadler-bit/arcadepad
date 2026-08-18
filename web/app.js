@@ -24,6 +24,21 @@ class KitPlayer {
     return this.audioContext;
   }
 
+  /// iOS Safari/Chrome only let an AudioContext start if it's created/resumed synchronously
+  /// inside a user-gesture handler — anything after an `await` (like our fetch+decode) is too
+  /// late and gets silently ignored. Call this as the very first thing in the click handler,
+  /// before any async work, so the context is already running by the time playback starts.
+  unlockSync() {
+    const ctx = this.ensureContext();
+    if (ctx.state === "suspended") ctx.resume();
+    const silent = ctx.createBuffer(1, 1, ctx.sampleRate);
+    const source = ctx.createBufferSource();
+    source.buffer = silent;
+    source.connect(ctx.destination);
+    source.start(0);
+    return ctx;
+  }
+
   async loadPad(pad) {
     const ctx = this.ensureContext();
     const response = await fetch(pad.audioURL);
@@ -156,19 +171,23 @@ async function main() {
     grid.appendChild(el);
 
     let loaded = false;
-    el.addEventListener("click", async () => {
+    el.addEventListener("click", () => {
+      player.unlockSync(); // must run synchronously in the click handler, before any await
       el.classList.add("playing");
       setTimeout(() => el.classList.remove("playing"), 150);
-      if (!loaded) {
-        loaded = true;
-        try {
-          await player.loadPad(pad);
-        } catch (err) {
-          loaded = false;
-          return;
+
+      (async () => {
+        if (!loaded) {
+          loaded = true;
+          try {
+            await player.loadPad(pad);
+          } catch (err) {
+            loaded = false;
+            return;
+          }
         }
-      }
-      player.play(pad);
+        player.play(pad);
+      })();
     });
   }
 }
