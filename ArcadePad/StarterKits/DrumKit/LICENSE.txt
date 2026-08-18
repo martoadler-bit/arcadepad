@@ -1,0 +1,20 @@
+Factory sample credits
+=======================
+
+Every file in this folder is dedicated to the public domain under the
+Creative Commons CC0 1.0 Universal license (no attribution required):
+https://creativecommons.org/publicdomain/zero/1.0/
+
+kick.mp3            "KICK_PO-12.aif"              by jannevse   https://freesound.org/s/669731/
+kick_natural.mp3    "KICK_NATURAL2.wav"           by jannevse   https://freesound.org/s/614398/
+snare.mp3           "ElAcHo Snare.wav"            by gis_sweden https://freesound.org/s/395547/
+hihat_closed.mp3    "HIHAT_acccent1jazzy1.wav"    by jannevse   https://freesound.org/s/614391/
+hihat_open.mp3      "HI-HAT_open_PO-12.aif"       by jannevse   https://freesound.org/s/669732/
+clap.mp3            "CLAP_PO-12.aif"              by jannevse   https://freesound.org/s/669736/
+tom.mp3             "FLOOR_TOM_PO-12.aif"         by jannevse   https://freesound.org/s/669735/
+crash.mp3           "CRASH_HIT_short1.wav"        by jannevse   https://freesound.org/s/614383/
+
+Downloaded from Freesound.org's CC0-tagged preview stream (128kbps MP3);
+re-decoded and normalized to mono/44.1kHz by Patchsynth's own SampleStore
+pipeline the first time each is loaded, same path used for a user's own
+recordings/imports.

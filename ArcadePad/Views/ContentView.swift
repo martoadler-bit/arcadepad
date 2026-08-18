@@ -9,6 +9,9 @@ struct ContentView: View {
     @State private var editingPadIndex: Int?
     @State private var showSequencer = false
     @State private var showShareSheet = false
+    @State private var showKitLibrary = false
+    @State private var showRenamePrompt = false
+    @State private var renameText = ""
 
     var body: some View {
         NavigationStack {
@@ -51,6 +54,17 @@ struct ContentView: View {
                         } label: {
                             Label("Share Kit", systemImage: "square.and.arrow.up")
                         }
+                        Button {
+                            renameText = kitStore.kit.name
+                            showRenamePrompt = true
+                        } label: {
+                            Label("Rename Kit", systemImage: "pencil")
+                        }
+                        Button {
+                            showKitLibrary = true
+                        } label: {
+                            Label("My Kits", systemImage: "square.stack")
+                        }
                     } label: {
                         Label("Grid", systemImage: "square.grid.3x3")
                     }
@@ -65,6 +79,14 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showShareSheet) {
             ShareKitView().environmentObject(kitStore)
+        }
+        .sheet(isPresented: $showKitLibrary) {
+            KitLibraryView().environmentObject(kitStore)
+        }
+        .alert("Rename kit", isPresented: $showRenamePrompt) {
+            TextField("Kit name", text: $renameText)
+            Button("Save") { kitStore.renameCurrentKit(to: renameText) }
+            Button("Cancel", role: .cancel) {}
         }
         .preferredColorScheme(.dark)
     }

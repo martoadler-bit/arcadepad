@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F69681607646A17C8F7732C /* hihat_closed.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3F3A2B8D5B4AA9C2AFF69BF4 /* hihat_closed.mp3 */; };
+		12F140508EA986DE9FC38F02 /* Di.wav in Resources */ = {isa = PBXBuildFile; fileRef = 5BE19669841D4B4AEA7C4F77 /* Di.wav */; };
 		188E6B6FA094D1AF35E0271D /* SequencerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F121B0AAD6D2CC90128E465 /* SequencerView.swift */; };
+		18ACA771B06BFF3DD1AF9475 /* Mi.wav in Resources */ = {isa = PBXBuildFile; fileRef = B9E1F7D904792E96DB2EB18D /* Mi.wav */; };
 		1CDC8EBAC67A339912CB549A /* ShareKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09083D948B13ABF58A3EFE17 /* ShareKitView.swift */; };
 		2918B441C5D58E803809CC6F /* KitStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906703288BFA80918EC411D5 /* KitStore.swift */; };
 		329DD9637B077BDDB9ACCD86 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 259DAD813A3B72EA0DF6AAE0 /* Preview Assets.xcassets */; };
@@ -16,20 +19,35 @@
 		3D0F7D583494F9B7748D1791 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4320BC2642058FA597FD979 /* Assets.xcassets */; };
 		417DEE8CB5B36CC831ED4220 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1876A409670D512414A0E2E /* Theme.swift */; };
 		4421B244BBD6911DD2509768 /* ArcadePadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825738DD05B125726B35F186 /* ArcadePadTests.swift */; };
+		44E3EF887D5AFEF7802C94DD /* clap.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 864067971E3F266DB0A25ACC /* clap.mp3 */; };
+		480FC8906C4BB516738B0830 /* StarterKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7864022327BF8C56318461F0 /* StarterKit.swift */; };
+		4E7F8D07DBAC37A368B78A02 /* Nam.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7D872C74A53A3414D38C49A9 /* Nam.wav */; };
 		54DEA171F28E2AAC3FE9C89D /* SupabaseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40EE8DF1B5889619A7EB3A0 /* SupabaseConfig.swift */; };
 		57CCD90C0DE11066BB0B4AAE /* Kit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FB4592FEC8426F4196B25A /* Kit.swift */; };
 		58380C82A15E2273C4C26E81 /* RecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BBCECD12C1188C50A4AD84 /* RecordView.swift */; };
 		5BB1EFCFCB2BA110C0C05A95 /* ArcadePadUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5825C330D1D18FAA940579FC /* ArcadePadUITests.swift */; };
 		5DCA62258630D8522DB59C13 /* SharedKitManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FD1C41AF0D4996AD18A47E /* SharedKitManifest.swift */; };
+		64C15ADA0992F67AA0B8E988 /* kick_natural.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9FEA1A362ACA9205E6F470DF /* kick_natural.mp3 */; };
 		6B9B1244CC7554B814B6C0E6 /* Pad.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73353312EEF24D1F17D11FC /* Pad.swift */; };
+		6BC38797398B5B8ABFCAEFF9 /* snare.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7ADA695EAF2C1AFD9B92B504 /* snare.mp3 */; };
 		76F488FCB46175C21AC2D7A0 /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16348602297F3A9ECD5FDEBE /* WaveformView.swift */; };
+		793A32C5E80D460667C5328E /* kick.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C979898B591F7438981F97C2 /* kick.mp3 */; };
 		85A11F2D7B0B87099AA3CB34 /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39839F0CFA3AF013E51046F9 /* Sample.swift */; };
 		8F3489C186FC8EC8BC60387B /* PadButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9004B69246E160A7E58BFC /* PadButtonView.swift */; };
+		B0EC5233C425A8601FF27340 /* KitLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0BA8304082133A0A5355809 /* KitLibraryView.swift */; };
+		B60A63693D4863D0C78562FF /* hihat_open.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FA4833BA3B77DCF7175F2406 /* hihat_open.mp3 */; };
 		C205FC13366999957B4AD998 /* WaveformLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69B7BAA0E58E1491ACC295A /* WaveformLoader.swift */; };
 		C73BC0B3C0067331FFE9D033 /* ArcadePadApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8F06981EA38414FF2D0740 /* ArcadePadApp.swift */; };
+		C87FED6BF79886098A17F1D1 /* tom.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 92A5DE0364F8D89083C4A45F /* tom.mp3 */; };
 		C977A85CC11A8FD1E1582F3B /* PadGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B37809345BDFCADF50FECC /* PadGridView.swift */; };
+		C9E566A0BF1BCF438766F96B /* KitSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53B1AC469FC42E0C75DA652 /* KitSummary.swift */; };
 		D1A68A95C6BF629F52C12FDF /* ShareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B28CB88B6A0AB5023D278B /* ShareService.swift */; };
+		DCA3709AFDA5C167B22F628F /* Ka.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9BE23E1AA3201D92FED55D76 /* Ka.wav */; };
+		E5469B17F9E1531CF743480E /* crash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F70E032484A048F6EAF5F337 /* crash.mp3 */; };
+		E84CF0167BF180DF3B6B5322 /* Ki.wav in Resources */ = {isa = PBXBuildFile; fileRef = AC11622F55D45F56259D3B11 /* Ki.wav */; };
+		E9631204D575DDB9182E6416 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = F22E0EFD65DB5BD002895549 /* LICENSE.txt */; };
 		E9BF6D505D60E61BFAB4C6AA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C9A97892BB291BD77A2825 /* ContentView.swift */; };
+		F42728A83C737C93A5A39851 /* Ta.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7EF7EEAE80849EA2B45433B1 /* Ta.wav */; };
 		F4433CA0722C704CA3FEF865 /* AudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C505A7ADE905751F28EE583 /* AudioEngine.swift */; };
 		FA82C36412C0BA32F484D5CB /* SequencerEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 251635B4D4CD9184EE610FF7 /* SequencerEngine.swift */; };
 /* End PBXBuildFile section */
@@ -59,27 +77,45 @@
 		259DAD813A3B72EA0DF6AAE0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2CEFEE8CF3BC44D1B23448B1 /* ArcadePadTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ArcadePadTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		39839F0CFA3AF013E51046F9 /* Sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample.swift; sourceTree = "<group>"; };
+		3F3A2B8D5B4AA9C2AFF69BF4 /* hihat_closed.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = hihat_closed.mp3; sourceTree = "<group>"; };
 		3F8F06981EA38414FF2D0740 /* ArcadePadApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadePadApp.swift; sourceTree = "<group>"; };
 		41E3DB7455E0504339ABDE4B /* ArcadePadUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ArcadePadUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		42B28CB88B6A0AB5023D278B /* ShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareService.swift; sourceTree = "<group>"; };
 		4E73254BC37C58C8F97FE002 /* Pattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pattern.swift; sourceTree = "<group>"; };
 		5825C330D1D18FAA940579FC /* ArcadePadUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadePadUITests.swift; sourceTree = "<group>"; };
+		5BE19669841D4B4AEA7C4F77 /* Di.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Di.wav; sourceTree = "<group>"; };
+		7864022327BF8C56318461F0 /* StarterKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterKit.swift; sourceTree = "<group>"; };
 		78FB4592FEC8426F4196B25A /* Kit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kit.swift; sourceTree = "<group>"; };
+		7ADA695EAF2C1AFD9B92B504 /* snare.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = snare.mp3; sourceTree = "<group>"; };
+		7D872C74A53A3414D38C49A9 /* Nam.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Nam.wav; sourceTree = "<group>"; };
+		7EF7EEAE80849EA2B45433B1 /* Ta.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Ta.wav; sourceTree = "<group>"; };
 		7F121B0AAD6D2CC90128E465 /* SequencerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequencerView.swift; sourceTree = "<group>"; };
 		825738DD05B125726B35F186 /* ArcadePadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadePadTests.swift; sourceTree = "<group>"; };
+		864067971E3F266DB0A25ACC /* clap.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = clap.mp3; sourceTree = "<group>"; };
 		86FD1C41AF0D4996AD18A47E /* SharedKitManifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedKitManifest.swift; sourceTree = "<group>"; };
 		906703288BFA80918EC411D5 /* KitStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KitStore.swift; sourceTree = "<group>"; };
+		92A5DE0364F8D89083C4A45F /* tom.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = tom.mp3; sourceTree = "<group>"; };
+		9BE23E1AA3201D92FED55D76 /* Ka.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Ka.wav; sourceTree = "<group>"; };
+		9FEA1A362ACA9205E6F470DF /* kick_natural.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = kick_natural.mp3; sourceTree = "<group>"; };
+		A0BA8304082133A0A5355809 /* KitLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KitLibraryView.swift; sourceTree = "<group>"; };
 		A4320BC2642058FA597FD979 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AC11622F55D45F56259D3B11 /* Ki.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Ki.wav; sourceTree = "<group>"; };
 		B2BBCECD12C1188C50A4AD84 /* RecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordView.swift; sourceTree = "<group>"; };
+		B9E1F7D904792E96DB2EB18D /* Mi.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Mi.wav; sourceTree = "<group>"; };
 		C69B7BAA0E58E1491ACC295A /* WaveformLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformLoader.swift; sourceTree = "<group>"; };
+		C979898B591F7438981F97C2 /* kick.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = kick.mp3; sourceTree = "<group>"; };
+		D53B1AC469FC42E0C75DA652 /* KitSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KitSummary.swift; sourceTree = "<group>"; };
 		DA9004B69246E160A7E58BFC /* PadButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadButtonView.swift; sourceTree = "<group>"; };
 		E40EE8DF1B5889619A7EB3A0 /* SupabaseConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseConfig.swift; sourceTree = "<group>"; };
 		E7C9A97892BB291BD77A2825 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E9B37809345BDFCADF50FECC /* PadGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadGridView.swift; sourceTree = "<group>"; };
 		F1876A409670D512414A0E2E /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		F22E0EFD65DB5BD002895549 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		F5DBF4350D8FE4E69E3ACFB7 /* PadEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadEditorView.swift; sourceTree = "<group>"; };
+		F70E032484A048F6EAF5F337 /* crash.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = crash.mp3; sourceTree = "<group>"; };
 		F73353312EEF24D1F17D11FC /* Pad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pad.swift; sourceTree = "<group>"; };
-		FB4EFF13118749E130300C30 /* ArcadePad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArcadePad.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA4833BA3B77DCF7175F2406 /* hihat_open.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = hihat_open.mp3; sourceTree = "<group>"; };
+		FB4EFF13118749E130300C30 /* ArcadePad.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ArcadePad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -119,6 +155,7 @@
 				A4320BC2642058FA597FD979 /* Assets.xcassets */,
 				F55A03AD7DD83F17B9023200 /* Core */,
 				2D85BDDE4B65700D0B102D56 /* Preview Content */,
+				694624299003AEAEE7A46933 /* StarterKits */,
 				180F7931800193FFF691E38F /* Views */,
 			);
 			path = ArcadePad;
@@ -128,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				E7C9A97892BB291BD77A2825 /* ContentView.swift */,
+				A0BA8304082133A0A5355809 /* KitLibraryView.swift */,
 				F5DBF4350D8FE4E69E3ACFB7 /* PadEditorView.swift */,
 				B2BBCECD12C1188C50A4AD84 /* RecordView.swift */,
 				7F121B0AAD6D2CC90128E465 /* SequencerView.swift */,
@@ -170,6 +208,44 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		4722179753ED5D782772BD51 /* DrumKit */ = {
+			isa = PBXGroup;
+			children = (
+				864067971E3F266DB0A25ACC /* clap.mp3 */,
+				F70E032484A048F6EAF5F337 /* crash.mp3 */,
+				3F3A2B8D5B4AA9C2AFF69BF4 /* hihat_closed.mp3 */,
+				FA4833BA3B77DCF7175F2406 /* hihat_open.mp3 */,
+				9FEA1A362ACA9205E6F470DF /* kick_natural.mp3 */,
+				C979898B591F7438981F97C2 /* kick.mp3 */,
+				F22E0EFD65DB5BD002895549 /* LICENSE.txt */,
+				7ADA695EAF2C1AFD9B92B504 /* snare.mp3 */,
+				92A5DE0364F8D89083C4A45F /* tom.mp3 */,
+			);
+			path = DrumKit;
+			sourceTree = "<group>";
+		};
+		694624299003AEAEE7A46933 /* StarterKits */ = {
+			isa = PBXGroup;
+			children = (
+				4722179753ED5D782772BD51 /* DrumKit */,
+				9D6A7076F6DD0A1DE98D3562 /* Konnakol */,
+			);
+			path = StarterKits;
+			sourceTree = "<group>";
+		};
+		9D6A7076F6DD0A1DE98D3562 /* Konnakol */ = {
+			isa = PBXGroup;
+			children = (
+				5BE19669841D4B4AEA7C4F77 /* Di.wav */,
+				9BE23E1AA3201D92FED55D76 /* Ka.wav */,
+				AC11622F55D45F56259D3B11 /* Ki.wav */,
+				B9E1F7D904792E96DB2EB18D /* Mi.wav */,
+				7D872C74A53A3414D38C49A9 /* Nam.wav */,
+				7EF7EEAE80849EA2B45433B1 /* Ta.wav */,
+			);
+			path = Konnakol;
+			sourceTree = "<group>";
+		};
 		AF5E3E27D4A065B2AA60CFBD /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -202,9 +278,11 @@
 			isa = PBXGroup;
 			children = (
 				78FB4592FEC8426F4196B25A /* Kit.swift */,
+				D53B1AC469FC42E0C75DA652 /* KitSummary.swift */,
 				F73353312EEF24D1F17D11FC /* Pad.swift */,
 				4E73254BC37C58C8F97FE002 /* Pattern.swift */,
 				39839F0CFA3AF013E51046F9 /* Sample.swift */,
+				7864022327BF8C56318461F0 /* StarterKit.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -288,6 +366,7 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					456876E5C1DE35EB19A3F1AA = {
+						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 					A7641AF358B5D14356EF4694 = {
@@ -328,7 +407,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D0F7D583494F9B7748D1791 /* Assets.xcassets in Resources */,
+				12F140508EA986DE9FC38F02 /* Di.wav in Resources */,
+				DCA3709AFDA5C167B22F628F /* Ka.wav in Resources */,
+				E84CF0167BF180DF3B6B5322 /* Ki.wav in Resources */,
+				E9631204D575DDB9182E6416 /* LICENSE.txt in Resources */,
+				18ACA771B06BFF3DD1AF9475 /* Mi.wav in Resources */,
+				4E7F8D07DBAC37A368B78A02 /* Nam.wav in Resources */,
 				329DD9637B077BDDB9ACCD86 /* Preview Assets.xcassets in Resources */,
+				F42728A83C737C93A5A39851 /* Ta.wav in Resources */,
+				44E3EF887D5AFEF7802C94DD /* clap.mp3 in Resources */,
+				E5469B17F9E1531CF743480E /* crash.mp3 in Resources */,
+				0F69681607646A17C8F7732C /* hihat_closed.mp3 in Resources */,
+				B60A63693D4863D0C78562FF /* hihat_open.mp3 in Resources */,
+				793A32C5E80D460667C5328E /* kick.mp3 in Resources */,
+				64C15ADA0992F67AA0B8E988 /* kick_natural.mp3 in Resources */,
+				6BC38797398B5B8ABFCAEFF9 /* snare.mp3 in Resources */,
+				C87FED6BF79886098A17F1D1 /* tom.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -359,7 +453,9 @@
 				F4433CA0722C704CA3FEF865 /* AudioEngine.swift in Sources */,
 				E9BF6D505D60E61BFAB4C6AA /* ContentView.swift in Sources */,
 				57CCD90C0DE11066BB0B4AAE /* Kit.swift in Sources */,
+				B0EC5233C425A8601FF27340 /* KitLibraryView.swift in Sources */,
 				2918B441C5D58E803809CC6F /* KitStore.swift in Sources */,
+				C9E566A0BF1BCF438766F96B /* KitSummary.swift in Sources */,
 				6B9B1244CC7554B814B6C0E6 /* Pad.swift in Sources */,
 				8F3489C186FC8EC8BC60387B /* PadButtonView.swift in Sources */,
 				390BE112619596A7893D4137 /* PadEditorView.swift in Sources */,
@@ -372,6 +468,7 @@
 				1CDC8EBAC67A339912CB549A /* ShareKitView.swift in Sources */,
 				D1A68A95C6BF629F52C12FDF /* ShareService.swift in Sources */,
 				5DCA62258630D8522DB59C13 /* SharedKitManifest.swift in Sources */,
+				480FC8906C4BB516738B0830 /* StarterKit.swift in Sources */,
 				54DEA171F28E2AAC3FE9C89D /* SupabaseConfig.swift in Sources */,
 				417DEE8CB5B36CC831ED4220 /* Theme.swift in Sources */,
 				C205FC13366999957B4AD998 /* WaveformLoader.swift in Sources */,
@@ -539,7 +636,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_ASSET_PATHS = "\"ArcadePad/Preview Content\"";
-				DEVELOPMENT_TEAM = 228T6U2RV4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Generated-Info.plist";
@@ -568,7 +664,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_ASSET_PATHS = "\"ArcadePad/Preview Content\"";
-				DEVELOPMENT_TEAM = 228T6U2RV4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Generated-Info.plist";
