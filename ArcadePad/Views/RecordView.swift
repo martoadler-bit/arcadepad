@@ -15,6 +15,8 @@ struct RecordView: View {
     @State private var micPermissionDenied = false
     @State private var recordingErrorMessage: String?
 
+    private let broadcastPollTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -22,9 +24,12 @@ struct RecordView: View {
                 VStack(spacing: 24) {
                     sourcePicker
 
-                    levelMeter
-
-                    recordButton
+                    if source == .systemAudio {
+                        systemAudioSection
+                    } else {
+                        levelMeter
+                        recordButton
+                    }
 
                     if let recordingErrorMessage {
                         Text(recordingErrorMessage)
@@ -50,6 +55,9 @@ struct RecordView: View {
         }
         .preferredColorScheme(.dark)
         .onAppear { requestMicPermission() }
+        .onReceive(broadcastPollTimer) { _ in
+            checkForFinishedBroadcast()
+        }
     }
 
     private var sourcePicker: some View {
@@ -60,6 +68,24 @@ struct RecordView: View {
         }
         .pickerStyle(.segmented)
         .disabled(audio.isRecording)
+    }
+
+    private var systemAudioSection: some View {
+        VStack(spacing: 16) {
+            Text("Tap below, pick ArcadePad, then Start Broadcast. Play the sound you want from another app — a red status bar appears while it's on. Stop it from here or Control Center when you're done; ArcadePad picks up the recording automatically.")
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.7))
+                .multilineTextAlignment(.center)
+
+            BroadcastPickerView()
+                .frame(width: 60, height: 60)
+
+            if recordedURL == nil {
+                Text("Waiting for broadcast…")
+                    .font(.caption2)
+                    .foregroundStyle(.white.opacity(0.4))
+            }
+        }
     }
 
     private var levelMeter: some View {
@@ -141,6 +167,16 @@ struct RecordView: View {
         guard let url = audio.stopRecording() else { return }
         recordedURL = url
         recordedDuration = Date().timeIntervalSince(recordStart ?? Date())
+        if sampleName.isEmpty {
+            sampleName = "Pad \(padIndex + 1) Sample"
+        }
+    }
+
+    private func checkForFinishedBroadcast() {
+        guard source == .systemAudio, recordedURL == nil else { return }
+        guard let url = BroadcastRecorder.takeFinishedRecording() else { return }
+        recordedURL = url
+        recordedDuration = (try? AVAudioFile(forReading: url)).map { Double($0.length) / $0.processingFormat.sampleRate } ?? 0
         if sampleName.isEmpty {
             sampleName = "Pad \(padIndex + 1) Sample"
         }

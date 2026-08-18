@@ -16,12 +16,10 @@ enum RecordingSource: String, CaseIterable, Identifiable {
         }
     }
 
-    /// System audio needs a Broadcast Upload Extension to actually capture other apps' output
-    /// — that isn't built yet, so selecting it today would just silently record the mic under
-    /// a misleading label. Disabled until the extension exists.
-    var isAvailable: Bool {
-        self != .systemAudio
-    }
+    /// System audio is captured via the ArcadePadBroadcast extension, driven by the system's
+    /// own broadcast picker rather than our RECORD button — see RecordView's `.systemAudio`
+    /// branch.
+    var isAvailable: Bool { true }
 }
 
 /// Owns the shared AVAudioEngine graph: one player node + effects chain per pad, plus the

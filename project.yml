@@ -31,9 +31,27 @@ targets:
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         DEVELOPMENT_ASSET_PATHS: "\"ArcadePad/Preview Content\""
         ENABLE_PREVIEWS: YES
+        CODE_SIGN_ENTITLEMENTS: ArcadePad/ArcadePad.entitlements
     info:
       path: Generated-Info.plist
       properties: {}
+    dependencies:
+      - target: ArcadePadBroadcast
+        embed: true
+  ArcadePadBroadcast:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: ArcadePadBroadcast
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dlrk.arcadepad.broadcast
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: ArcadePadBroadcast/Info.plist
+        CODE_SIGN_ENTITLEMENTS: ArcadePadBroadcast/ArcadePadBroadcast.entitlements
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SKIP_INSTALL: YES
   ArcadePadTests:
     type: bundle.unit-test
     platform: iOS
