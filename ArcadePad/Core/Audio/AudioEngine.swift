@@ -15,6 +15,13 @@ enum RecordingSource: String, CaseIterable, Identifiable {
         case .systemAudio: return "SYSTEM AUDIO"
         }
     }
+
+    /// System audio needs a Broadcast Upload Extension to actually capture other apps' output
+    /// — that isn't built yet, so selecting it today would just silently record the mic under
+    /// a misleading label. Disabled until the extension exists.
+    var isAvailable: Bool {
+        self != .systemAudio
+    }
 }
 
 /// Owns the shared AVAudioEngine graph: one player node + effects chain per pad, plus the
@@ -52,6 +59,7 @@ final class AudioEngine: ObservableObject {
     private init() {
         configureSession()
         observeRouteChanges()
+        observeInterruptions()
         buildAllPadChains()
     }
 
@@ -75,6 +83,47 @@ final class AudioEngine: ObservableObject {
             queue: .main
         ) { [weak self] _ in
             self?.refreshAvailableInputs()
+        }
+    }
+
+    /// A phone call, Siri, another app grabbing audio, Control Center, etc. all deactivate
+    /// the session out from under us. Without this, every input (mic included) silently stops
+    /// working — `inputFormat(forBus:)` starts returning zero channels — until the app is
+    /// force-quit and relaunched. Reactivating on `.ended` fixes it in place.
+    private func observeInterruptions() {
+        NotificationCenter.default.addObserver(
+            forName: AVAudioSession.interruptionNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] notification in
+            guard let self,
+                  let typeValue = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,
+                  let type = AVAudioSession.InterruptionType(rawValue: typeValue)
+            else { return }
+
+            switch type {
+            case .began:
+                if self.isRecording {
+                    self.engine.inputNode.removeTap(onBus: 0)
+                    self.recordingFile = nil
+                    self.isRecording = false
+                    self.inputLevel = 0
+                }
+            case .ended:
+                self.reactivateSession()
+            @unknown default:
+                break
+            }
+        }
+    }
+
+    private func reactivateSession() {
+        let session = AVAudioSession.sharedInstance()
+        do {
+            try session.setActive(true, options: [])
+            refreshAvailableInputs()
+        } catch {
+            print("ArcadePad: failed to reactivate audio session: \(error)")
         }
     }
 
@@ -295,7 +344,14 @@ final class AudioEngine: ObservableObject {
         // must happen before engine.start(), otherwise AVAudioEngine can throw an
         // uncatchable ObjC exception on Simulator when the graph is initialized with a
         // stale/zero-channel input format.
-        let format = input.inputFormat(forBus: 0)
+        var format = input.inputFormat(forBus: 0)
+        if format.channelCount == 0 || format.sampleRate == 0 {
+            // A stale/interrupted session reports a dead input format. One reactivation
+            // attempt recovers most cases (e.g. after a call or Control Center audio grab)
+            // without forcing the user to relaunch the app.
+            reactivateSession()
+            format = input.inputFormat(forBus: 0)
+        }
         guard format.channelCount > 0, format.sampleRate > 0 else {
             throw RecordingError.noInputAvailable
         }

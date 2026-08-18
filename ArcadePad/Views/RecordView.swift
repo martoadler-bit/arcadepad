@@ -54,7 +54,7 @@ struct RecordView: View {
 
     private var sourcePicker: some View {
         Picker("Source", selection: $source) {
-            ForEach(RecordingSource.allCases) { src in
+            ForEach(RecordingSource.allCases.filter(\.isAvailable)) { src in
                 Text(src.label).tag(src)
             }
         }
