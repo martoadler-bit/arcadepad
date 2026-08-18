@@ -1,4 +1,5 @@
 import Foundation
+import AVFoundation
 
 /// Uploads a Kit to Supabase Storage (via REST, no SDK) and returns a public web-preview
 /// URL, served as a static page from GitHub Pages. Auth is anonymous and silent: the
@@ -41,12 +42,15 @@ final class ShareService {
         for pad in filledPads {
             guard let sample = pad.sample else { continue }
             let localURL = kitStore.sampleURL(for: sample)
-            let audioData = try Data(contentsOf: localURL)
-            let storagePath = "\(shareID)/pad\(pad.index).caf"
+            // Recordings are saved as .caf, which only Safari's Web Audio can decode —
+            // Chrome and Firefox reject it outright. Convert to 16-bit PCM WAV, which every
+            // browser's decodeAudioData understands.
+            let audioData = try Self.wavData(fromLocalFile: localURL)
+            let storagePath = "\(shareID)/pad\(pad.index).wav"
             let downloadURL = try await upload(
                 data: audioData,
                 path: storagePath,
-                contentType: "audio/x-caf",
+                contentType: "audio/wav",
                 accessToken: accessToken
             )
             sharedPads.append(
@@ -132,6 +136,47 @@ final class ShareService {
     private static func randomID(length: Int = 9) -> String {
         let alphabet = Array("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
         return String((0..<length).map { _ in alphabet.randomElement()! })
+    }
+
+    /// Reads a local recording and re-encodes it as 16-bit PCM WAV for universal browser support.
+    private static func wavData(fromLocalFile sourceURL: URL) throws -> Data {
+        let sourceFile = try AVAudioFile(forReading: sourceURL)
+        let sourceFormat = sourceFile.processingFormat
+        let frameCount = AVAudioFrameCount(sourceFile.length)
+        guard frameCount > 0, let sourceBuffer = AVAudioPCMBuffer(pcmFormat: sourceFormat, frameCapacity: frameCount) else {
+            throw ShareError.uploadFailed("empty or unreadable recording")
+        }
+        try sourceFile.read(into: sourceBuffer)
+
+        guard let wavFormat = AVAudioFormat(
+            commonFormat: .pcmFormatInt16,
+            sampleRate: sourceFormat.sampleRate,
+            channels: sourceFormat.channelCount,
+            interleaved: true
+        ), let converter = AVAudioConverter(from: sourceFormat, to: wavFormat),
+        let convertedBuffer = AVAudioPCMBuffer(pcmFormat: wavFormat, frameCapacity: frameCount)
+        else {
+            throw ShareError.uploadFailed("couldn't prepare WAV conversion")
+        }
+
+        var conversionError: NSError?
+        var didProvideInput = false
+        converter.convert(to: convertedBuffer, error: &conversionError) { _, inputStatus in
+            if didProvideInput {
+                inputStatus.pointee = .noDataNow
+                return nil
+            }
+            didProvideInput = true
+            inputStatus.pointee = .haveData
+            return sourceBuffer
+        }
+        if let conversionError { throw conversionError }
+
+        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID().uuidString).wav")
+        defer { try? FileManager.default.removeItem(at: tempURL) }
+        let outFile = try AVAudioFile(forWriting: tempURL, settings: wavFormat.settings, commonFormat: .pcmFormatInt16, interleaved: true)
+        try outFile.write(from: convertedBuffer)
+        return try Data(contentsOf: tempURL)
     }
 }
 
