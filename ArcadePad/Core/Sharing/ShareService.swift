@@ -8,7 +8,7 @@ final class ShareService {
     static let shared = ShareService()
 
     /// Where the static preview page (web/) is published.
-    private static let previewPageURL = "https://martoadler-bit.github.io/arcadepad/"
+    private static let previewPageURL = "https://elegant-toffee-aef0c5.netlify.app/"
 
     /// Matches the Storage bucket's own file-size limit (set in the Supabase dashboard) —
     /// checked client-side too so oversized samples fail fast with a clear message instead
