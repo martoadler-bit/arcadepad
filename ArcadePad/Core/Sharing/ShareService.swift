@@ -10,11 +10,17 @@ final class ShareService {
     /// Where the static preview page (web/) is published.
     private static let previewPageURL = "https://martoadler-bit.github.io/arcadepad/"
 
+    /// Matches the Storage bucket's own file-size limit (set in the Supabase dashboard) —
+    /// checked client-side too so oversized samples fail fast with a clear message instead
+    /// of a generic upload error after the user already waited for the request.
+    private static let maxSampleBytes = 20 * 1024 * 1024
+
     enum ShareError: LocalizedError {
         case notConfigured
         case authFailed
         case uploadFailed(String)
         case emptyKit
+        case sampleTooLarge(String)
 
         var errorDescription: String? {
             switch self {
@@ -22,6 +28,7 @@ final class ShareService {
             case .authFailed: return "Couldn't authenticate with the share service."
             case .uploadFailed(let detail): return "Upload failed: \(detail)"
             case .emptyKit: return "This kit has no samples to share yet."
+            case .sampleTooLarge(let name): return "\"\(name)\" is too long to share (max ~3-4 minutes). Trim it first."
             }
         }
     }
@@ -46,6 +53,9 @@ final class ShareService {
             // Chrome and Firefox reject it outright. Convert to 16-bit PCM WAV, which every
             // browser's decodeAudioData understands.
             let audioData = try Self.wavData(fromLocalFile: localURL)
+            guard audioData.count <= Self.maxSampleBytes else {
+                throw ShareError.sampleTooLarge(sample.name)
+            }
             let storagePath = "\(shareID)/pad\(pad.index).wav"
             let downloadURL = try await upload(
                 data: audioData,
