@@ -52,5 +52,21 @@ struct StarterKit: Identifiable {
                 PadDefinition(name: "Ta", resource: "Ta", ext: "wav"),
             ]
         ),
+        StarterKit(
+            id: "chiptune",
+            name: "Chiptune",
+            subtitle: "8-bit synth game sounds",
+            gridSize: .eight,
+            pads: [
+                PadDefinition(name: "Coin", resource: "coin", ext: "wav"),
+                PadDefinition(name: "Jump", resource: "jump", ext: "wav"),
+                PadDefinition(name: "Laser", resource: "laser", ext: "wav"),
+                PadDefinition(name: "Power-Up", resource: "powerup", ext: "wav"),
+                PadDefinition(name: "Explosion", resource: "explosion", ext: "wav"),
+                PadDefinition(name: "Hit", resource: "hit", ext: "wav"),
+                PadDefinition(name: "Select", resource: "select", ext: "wav"),
+                PadDefinition(name: "Game Over", resource: "gameover", ext: "wav"),
+            ]
+        ),
     ]
 }
