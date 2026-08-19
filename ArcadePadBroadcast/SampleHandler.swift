@@ -1,5 +1,6 @@
 import ReplayKit
 import AVFoundation
+import os.log
 
 /// Receives audio buffers from other apps while the user has a system broadcast running with
 /// ArcadePad selected as the destination. Runs as a separate, memory-constrained process — no
@@ -8,43 +9,76 @@ final class SampleHandler: RPBroadcastSampleHandler {
     private static let appGroupID = "group.com.dlrk.arcadepad"
     private static let audioFileName = "system_audio.caf"
     private static let markerFileName = "system_audio.done"
+    private static let log = Logger(subsystem: "com.dlrk.arcadepad.broadcast", category: "SampleHandler")
 
     private var audioFile: AVAudioFile?
+    private var bufferCount = 0
 
     override func broadcastStarted(withSetupInfo setupInfo: [String: NSObject]?) {
-        // The audio format isn't known until the first buffer arrives, so the file is opened
-        // lazily in processSampleBuffer instead of here.
-        try? FileManager.default.removeItem(at: Self.markerURL())
-        try? FileManager.default.removeItem(at: Self.audioURL())
+        Self.log.notice("broadcastStarted")
+        guard let container = Self.containerURL() else {
+            Self.log.error("broadcastStarted: App Group container is nil — check the App Group entitlement/capability on both targets")
+            return
+        }
+        Self.log.notice("broadcastStarted: container = \(container.path, privacy: .public)")
+        if let audioURL = Self.audioURL() {
+            try? FileManager.default.removeItem(at: audioURL)
+        }
+        if let markerURL = Self.markerURL() {
+            try? FileManager.default.removeItem(at: markerURL)
+        }
     }
 
     override func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, with sampleBufferType: RPSampleBufferType) {
         guard sampleBufferType == .audioApp else { return }
-        guard let pcmBuffer = Self.pcmBuffer(from: sampleBuffer) else { return }
+        guard let audioURL = Self.audioURL() else { return }
+        guard let pcmBuffer = Self.pcmBuffer(from: sampleBuffer) else {
+            Self.log.error("processSampleBuffer: couldn't build a PCM buffer from this sample")
+            return
+        }
 
         if audioFile == nil {
-            audioFile = try? AVAudioFile(forWriting: Self.audioURL(), settings: pcmBuffer.format.settings)
+            do {
+                audioFile = try AVAudioFile(forWriting: audioURL, settings: pcmBuffer.format.settings)
+                Self.log.notice("processSampleBuffer: opened audio file at \(audioURL.path, privacy: .public), format: \(pcmBuffer.format.description, privacy: .public)")
+            } catch {
+                Self.log.error("processSampleBuffer: failed to open audio file: \(String(describing: error), privacy: .public)")
+            }
         }
-        try? audioFile?.write(from: pcmBuffer)
+        do {
+            try audioFile?.write(from: pcmBuffer)
+            bufferCount += 1
+            if bufferCount % 100 == 0 {
+                Self.log.notice("processSampleBuffer: wrote \(self.bufferCount) buffers so far")
+            }
+        } catch {
+            Self.log.error("processSampleBuffer: write failed: \(String(describing: error), privacy: .public)")
+        }
     }
 
     override func broadcastFinished() {
+        Self.log.notice("broadcastFinished: total buffers written = \(self.bufferCount)")
         audioFile = nil
-        FileManager.default.createFile(atPath: Self.markerURL().path, contents: Data())
+        guard let markerURL = Self.markerURL() else {
+            Self.log.error("broadcastFinished: App Group container is nil, can't write marker")
+            return
+        }
+        let created = FileManager.default.createFile(atPath: markerURL.path, contents: Data())
+        Self.log.notice("broadcastFinished: marker written = \(created) at \(markerURL.path, privacy: .public)")
     }
 
     // MARK: Shared container
 
-    private static func containerURL() -> URL {
-        FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupID)!
+    private static func containerURL() -> URL? {
+        FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupID)
     }
 
-    static func audioURL() -> URL {
-        containerURL().appendingPathComponent(audioFileName)
+    static func audioURL() -> URL? {
+        containerURL()?.appendingPathComponent(audioFileName)
     }
 
-    static func markerURL() -> URL {
-        containerURL().appendingPathComponent(markerFileName)
+    static func markerURL() -> URL? {
+        containerURL()?.appendingPathComponent(markerFileName)
     }
 
     // MARK: CMSampleBuffer -> AVAudioPCMBuffer
