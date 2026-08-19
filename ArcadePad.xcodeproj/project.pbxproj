@@ -118,7 +118,7 @@
 		41E3DB7455E0504339ABDE4B /* ArcadePadUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ArcadePadUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		42B28CB88B6A0AB5023D278B /* ShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareService.swift; sourceTree = "<group>"; };
 		4E73254BC37C58C8F97FE002 /* Pattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pattern.swift; sourceTree = "<group>"; };
-		53E469FD31C8C234F9CFF3DA /* ArcadePadBroadcast.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ArcadePadBroadcast.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		53E469FD31C8C234F9CFF3DA /* ArcadePadBroadcast.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = ArcadePadBroadcast.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		5825C330D1D18FAA940579FC /* ArcadePadUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadePadUITests.swift; sourceTree = "<group>"; };
 		5BE19669841D4B4AEA7C4F77 /* Di.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Di.wav; sourceTree = "<group>"; };
 		7864022327BF8C56318461F0 /* StarterKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterKit.swift; sourceTree = "<group>"; };
@@ -162,7 +162,7 @@
 		F70E032484A048F6EAF5F337 /* crash.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = crash.mp3; sourceTree = "<group>"; };
 		F73353312EEF24D1F17D11FC /* Pad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pad.swift; sourceTree = "<group>"; };
 		FA4833BA3B77DCF7175F2406 /* hihat_open.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = hihat_open.mp3; sourceTree = "<group>"; };
-		FB4EFF13118749E130300C30 /* ArcadePad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArcadePad.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB4EFF13118749E130300C30 /* ArcadePad.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ArcadePad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBE1FC00FC2D239637EDE077 /* coin.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = coin.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -464,6 +464,7 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					456876E5C1DE35EB19A3F1AA = {
+						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 					A7641AF358B5D14356EF4694 = {
@@ -476,6 +477,7 @@
 						ProvisioningStyle = Automatic;
 					};
 					F636D3E5B93B882A2F69061C = {
+						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -705,6 +707,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -724,6 +727,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -757,7 +761,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ArcadePadBroadcast/ArcadePadBroadcast.entitlements;
-				DEVELOPMENT_TEAM = 228T6U2RV4;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ArcadePadBroadcast/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -781,7 +784,6 @@
 				CODE_SIGN_ENTITLEMENTS = ArcadePad/ArcadePad.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_ASSET_PATHS = "\"ArcadePad/Preview Content\"";
-				DEVELOPMENT_TEAM = 228T6U2RV4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Generated-Info.plist";
@@ -807,7 +809,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ArcadePadBroadcast/ArcadePadBroadcast.entitlements;
-				DEVELOPMENT_TEAM = 228T6U2RV4;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ArcadePadBroadcast/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -831,7 +832,6 @@
 				CODE_SIGN_ENTITLEMENTS = ArcadePad/ArcadePad.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_ASSET_PATHS = "\"ArcadePad/Preview Content\"";
-				DEVELOPMENT_TEAM = 228T6U2RV4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Generated-Info.plist";
@@ -888,6 +888,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -901,6 +902,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
