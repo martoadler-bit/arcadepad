@@ -1,5 +1,21 @@
 import Foundation
 
+/// Groups starter kits in the library UI. Purely presentational — installing a kit works
+/// the same regardless of category.
+enum StarterKitCategory: String, CaseIterable {
+    case musical = "MUSICAL"
+    case percussion = "PERCUSSION"
+    case streamer = "STREAMER"
+
+    var order: Int {
+        switch self {
+        case .musical: return 0
+        case .percussion: return 1
+        case .streamer: return 2
+        }
+    }
+}
+
 /// A bundled, ready-to-use kit definition. Installing one copies its audio out of the app
 /// bundle into the user's own kit folder — from then on it behaves exactly like a kit the
 /// user built themselves (editable, re-shareable, etc.).
@@ -18,6 +34,7 @@ struct StarterKit: Identifiable {
     let id: String
     let name: String
     let subtitle: String
+    let category: StarterKitCategory
     let gridSize: GridSize
     let pads: [PadDefinition]
 
@@ -26,6 +43,7 @@ struct StarterKit: Identifiable {
             id: "drum-kit",
             name: "Drum Kit",
             subtitle: "Kick, snare, hats, clap, tom, crash",
+            category: .percussion,
             gridSize: .eight,
             pads: [
                 PadDefinition(name: "Kick", resource: "kick", ext: "mp3"),
@@ -39,9 +57,44 @@ struct StarterKit: Identifiable {
             ]
         ),
         StarterKit(
+            id: "808-drums",
+            name: "808 Drums",
+            subtitle: "Synthesized trap-style kick, snare, hats, clap",
+            category: .percussion,
+            gridSize: .eight,
+            pads: [
+                PadDefinition(name: "Kick", resource: "kick", ext: "wav"),
+                PadDefinition(name: "Snare", resource: "snare", ext: "wav"),
+                PadDefinition(name: "Hat Closed", resource: "hihat_closed", ext: "wav"),
+                PadDefinition(name: "Hat Open", resource: "hihat_open", ext: "wav"),
+                PadDefinition(name: "Clap", resource: "clap", ext: "wav"),
+                PadDefinition(name: "Rim", resource: "rim", ext: "wav"),
+                PadDefinition(name: "Tom", resource: "tom", ext: "wav"),
+                PadDefinition(name: "Perc", resource: "perc", ext: "wav"),
+            ]
+        ),
+        StarterKit(
+            id: "hand-drums",
+            name: "Hand Drums",
+            subtitle: "Conga, bongo and shaker-style percussion",
+            category: .percussion,
+            gridSize: .eight,
+            pads: [
+                PadDefinition(name: "Conga Low", resource: "conga_low", ext: "wav"),
+                PadDefinition(name: "Conga Mid", resource: "conga_mid", ext: "wav"),
+                PadDefinition(name: "Conga High", resource: "conga_high", ext: "wav"),
+                PadDefinition(name: "Slap", resource: "slap", ext: "wav"),
+                PadDefinition(name: "Tom Low", resource: "tom_low", ext: "wav"),
+                PadDefinition(name: "Tom High", resource: "tom_high", ext: "wav"),
+                PadDefinition(name: "Shaker", resource: "shaker", ext: "wav"),
+                PadDefinition(name: "Click", resource: "click", ext: "wav"),
+            ]
+        ),
+        StarterKit(
             id: "konnakol-bols",
             name: "Konnakol Bols",
             subtitle: "Indian vocal percussion syllables",
+            category: .percussion,
             gridSize: .eight,
             pads: [
                 PadDefinition(name: "Di", resource: "Di", ext: "wav"),
@@ -56,6 +109,7 @@ struct StarterKit: Identifiable {
             id: "chiptune",
             name: "Chiptune",
             subtitle: "8-bit synth game sounds",
+            category: .musical,
             gridSize: .eight,
             pads: [
                 PadDefinition(name: "Coin", resource: "coin", ext: "wav"),
@@ -66,6 +120,57 @@ struct StarterKit: Identifiable {
                 PadDefinition(name: "Hit", resource: "hit", ext: "wav"),
                 PadDefinition(name: "Select", resource: "select", ext: "wav"),
                 PadDefinition(name: "Game Over", resource: "gameover", ext: "wav"),
+            ]
+        ),
+        StarterKit(
+            id: "synth-bass",
+            name: "Synth Bass",
+            subtitle: "Plucky one-shot bass notes across an octave",
+            category: .musical,
+            gridSize: .eight,
+            pads: [
+                PadDefinition(name: "C2", resource: "bass_c2", ext: "wav"),
+                PadDefinition(name: "D2", resource: "bass_d2", ext: "wav"),
+                PadDefinition(name: "Eb2", resource: "bass_eb2", ext: "wav"),
+                PadDefinition(name: "F2", resource: "bass_f2", ext: "wav"),
+                PadDefinition(name: "G2", resource: "bass_g2", ext: "wav"),
+                PadDefinition(name: "Ab2", resource: "bass_ab2", ext: "wav"),
+                PadDefinition(name: "Bb2", resource: "bass_bb2", ext: "wav"),
+                PadDefinition(name: "C3", resource: "bass_c3", ext: "wav"),
+            ]
+        ),
+        StarterKit(
+            id: "arp-bells",
+            name: "Arp Bells",
+            subtitle: "Bell tones tuned to a pentatonic scale",
+            category: .musical,
+            gridSize: .eight,
+            pads: [
+                PadDefinition(name: "C5", resource: "bell_c5", ext: "wav"),
+                PadDefinition(name: "D5", resource: "bell_d5", ext: "wav"),
+                PadDefinition(name: "F5", resource: "bell_f5", ext: "wav"),
+                PadDefinition(name: "G5", resource: "bell_g5", ext: "wav"),
+                PadDefinition(name: "A5", resource: "bell_a5", ext: "wav"),
+                PadDefinition(name: "C6", resource: "bell_c6", ext: "wav"),
+                PadDefinition(name: "D6", resource: "bell_d6", ext: "wav"),
+                PadDefinition(name: "F6", resource: "bell_f6", ext: "wav"),
+            ]
+        ),
+        StarterKit(
+            id: "streamer-fx",
+            name: "Streamer FX",
+            subtitle: "Airhorn, buzzer, drumroll, applause and more",
+            category: .streamer,
+            gridSize: .eight,
+            pads: [
+                PadDefinition(name: "Airhorn", resource: "airhorn", ext: "wav"),
+                PadDefinition(name: "Buzzer", resource: "buzzer", ext: "wav"),
+                PadDefinition(name: "Drumroll", resource: "drumroll", ext: "wav"),
+                PadDefinition(name: "Applause", resource: "applause", ext: "wav"),
+                PadDefinition(name: "Success", resource: "success_chime", ext: "wav"),
+                PadDefinition(name: "Fail", resource: "fail_descend", ext: "wav"),
+                PadDefinition(name: "Alert", resource: "alert_beep", ext: "wav"),
+                PadDefinition(name: "Scratch", resource: "record_scratch", ext: "wav"),
             ]
         ),
     ]

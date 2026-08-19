@@ -23,12 +23,17 @@ struct KitLibraryView: View {
                         Text("MY KITS").foregroundStyle(ArcadeTheme.marqueeText)
                     }
 
-                    Section {
-                        ForEach(StarterKit.all) { starter in
-                            starterRow(starter)
+                    ForEach(StarterKitCategory.allCases.sorted { $0.order < $1.order }, id: \.self) { category in
+                        let kits = StarterKit.all.filter { $0.category == category }
+                        if !kits.isEmpty {
+                            Section {
+                                ForEach(kits) { starter in
+                                    starterRow(starter)
+                                }
+                            } header: {
+                                Text(category.rawValue).foregroundStyle(ArcadeTheme.marqueeText)
+                            }
                         }
-                    } header: {
-                        Text("STARTER KITS").foregroundStyle(ArcadeTheme.marqueeText)
                     }
                 }
                 .scrollContentBackground(.hidden)
