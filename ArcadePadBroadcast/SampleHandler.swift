@@ -84,13 +84,27 @@ final class SampleHandler: RPBroadcastSampleHandler {
     // MARK: CMSampleBuffer -> AVAudioPCMBuffer
 
     private static func pcmBuffer(from sampleBuffer: CMSampleBuffer) -> AVAudioPCMBuffer? {
-        guard let formatDescription = CMSampleBufferGetFormatDescription(sampleBuffer),
-              let asbdPointer = CMAudioFormatDescriptionGetStreamBasicDescription(formatDescription),
-              let format = AVAudioFormat(streamDescription: asbdPointer)
-        else { return nil }
+        guard let formatDescription = CMSampleBufferGetFormatDescription(sampleBuffer) else {
+            log.error("pcmBuffer: CMSampleBufferGetFormatDescription returned nil")
+            return nil
+        }
+        guard let asbdPointer = CMAudioFormatDescriptionGetStreamBasicDescription(formatDescription) else {
+            log.error("pcmBuffer: CMAudioFormatDescriptionGetStreamBasicDescription returned nil")
+            return nil
+        }
+        let asbd = asbdPointer.pointee
+        guard let format = AVAudioFormat(streamDescription: asbdPointer) else {
+            log.error("pcmBuffer: AVAudioFormat init failed for formatID=\(asbd.mFormatID, privacy: .public) channels=\(asbd.mChannelsPerFrame, privacy: .public) sampleRate=\(asbd.mSampleRate, privacy: .public) flags=\(asbd.mFormatFlags, privacy: .public) bitsPerChannel=\(asbd.mBitsPerChannel, privacy: .public)")
+            return nil
+        }
 
         let numSamples = CMSampleBufferGetNumSamples(sampleBuffer)
-        guard numSamples > 0, let pcmBuffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(numSamples)) else {
+        guard numSamples > 0 else {
+            log.error("pcmBuffer: numSamples = 0")
+            return nil
+        }
+        guard let pcmBuffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(numSamples)) else {
+            log.error("pcmBuffer: AVAudioPCMBuffer allocation failed, frameCapacity=\(numSamples, privacy: .public)")
             return nil
         }
         pcmBuffer.frameLength = AVAudioFrameCount(numSamples)
@@ -110,7 +124,10 @@ final class SampleHandler: RPBroadcastSampleHandler {
             flags: kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment,
             blockBufferOut: &blockBuffer
         )
-        guard status == noErr else { return nil }
+        guard status == noErr else {
+            log.error("pcmBuffer: CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer failed, status=\(status, privacy: .public)")
+            return nil
+        }
 
         let dstListPointer = UnsafeMutableAudioBufferListPointer(pcmBuffer.mutableAudioBufferList)
         for i in 0..<min(dstListPointer.count, srcListPointer.count) {
