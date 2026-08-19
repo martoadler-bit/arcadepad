@@ -1,5 +1,6 @@
 const PAD_COLORS = ["#FF3333", "#FF8C0D", "#FFD90D", "#26D959", "#1ABFF2", "#BF40FF"];
 const COLUMNS_BY_GRID_SIZE = { 4: 2, 8: 4, 12: 4, 16: 4 };
+const LINK_LIFETIME_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 function publicDownloadURL(path) {
   const encoded = path.split("/").map(encodeURIComponent).join("/");
@@ -133,6 +134,12 @@ async function main() {
     manifest = await response.json();
   } catch (err) {
     content.innerHTML = '<div class="state">Couldn\'t load this kit. The link may be wrong or expired.</div>';
+    return;
+  }
+
+  const createdAt = Date.parse(manifest.createdAt);
+  if (!isNaN(createdAt) && Date.now() - createdAt > LINK_LIFETIME_MS) {
+    content.innerHTML = '<div class="state">This link has expired. Shared kits are only available for 7 days.</div>';
     return;
   }
 

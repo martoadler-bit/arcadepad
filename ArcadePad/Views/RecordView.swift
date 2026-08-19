@@ -80,6 +80,11 @@ struct RecordView: View {
             BroadcastPickerView()
                 .frame(width: 60, height: 60)
 
+            Text("Only capture audio you have the rights to use.")
+                .font(.caption2)
+                .foregroundStyle(.white.opacity(0.5))
+                .multilineTextAlignment(.center)
+
             if recordedURL == nil {
                 Text("Waiting for broadcast…")
                     .font(.caption2)

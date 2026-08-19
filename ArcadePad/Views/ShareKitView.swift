@@ -7,6 +7,7 @@ struct ShareKitView: View {
     @State private var isUploading = false
     @State private var shareURL: URL?
     @State private var errorMessage: String?
+    @State private var showConfirmation = false
 
     var body: some View {
         NavigationStack {
@@ -17,9 +18,15 @@ struct ShareKitView: View {
                         .font(ArcadeTheme.displayFont)
                         .foregroundStyle(ArcadeTheme.marqueeText)
 
-                    Text("Uploads your kit's samples so anyone with the link can try the pads in a browser — no app install needed. Effects aren't previewed on the web, just playback.")
+                    Text("Uploads your kit's samples so anyone with the link can try the pads in a browser — no app install needed. Effects aren't previewed on the web, just playback. Links expire after 7 days.")
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.7))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+
+                    Text("Only share samples you have the rights to.")
+                        .font(.caption2)
+                        .foregroundStyle(.white.opacity(0.5))
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
 
@@ -45,7 +52,7 @@ struct ShareKitView: View {
                         .padding(.horizontal)
                     } else {
                         Button {
-                            upload()
+                            showConfirmation = true
                         } label: {
                             Text("UPLOAD & GET LINK")
                                 .font(ArcadeTheme.displayFont)
@@ -72,6 +79,16 @@ struct ShareKitView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Close") { dismiss() }
                 }
+            }
+            .confirmationDialog(
+                "Share this kit publicly?",
+                isPresented: $showConfirmation,
+                titleVisibility: .visible
+            ) {
+                Button("Upload & Share") { upload() }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Anyone with the link can play these samples in a browser for 7 days. Only share content you have the rights to.")
             }
         }
         .preferredColorScheme(.dark)
