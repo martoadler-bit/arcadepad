@@ -109,16 +109,35 @@ final class SampleHandler: RPBroadcastSampleHandler {
         }
         pcmBuffer.frameLength = AVAudioFrameCount(numSamples)
 
-        let channelCount = Int(asbdPointer.pointee.mChannelsPerFrame)
-        let srcListPointer = AudioBufferList.allocate(maximumBuffers: channelCount)
-        defer { free(srcListPointer.unsafeMutablePointer) }
+        // Ask CMSampleBuffer how big the AudioBufferList actually needs to be instead of
+        // guessing from mChannelsPerFrame — that guess undersized the allocation (status
+        // -12737 = kCMSampleBufferError_ArrayTooSmall) for these buffers.
+        var sizeNeeded = 0
+        let sizeStatus = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(
+            sampleBuffer,
+            bufferListSizeNeededOut: &sizeNeeded,
+            bufferListOut: nil,
+            bufferListSize: 0,
+            blockBufferAllocator: nil,
+            blockBufferMemoryAllocator: nil,
+            flags: 0,
+            blockBufferOut: nil
+        )
+        guard sizeStatus == noErr, sizeNeeded > 0 else {
+            log.error("pcmBuffer: size query failed, status=\(sizeStatus, privacy: .public)")
+            return nil
+        }
+
+        let rawList = malloc(sizeNeeded)!
+        defer { free(rawList) }
+        let srcListPointer = UnsafeMutableAudioBufferListPointer(rawList.assumingMemoryBound(to: AudioBufferList.self))
 
         var blockBuffer: CMBlockBuffer?
         let status = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(
             sampleBuffer,
             bufferListSizeNeededOut: nil,
             bufferListOut: srcListPointer.unsafeMutablePointer,
-            bufferListSize: AudioBufferList.sizeInBytes(maximumBuffers: channelCount),
+            bufferListSize: sizeNeeded,
             blockBufferAllocator: nil,
             blockBufferMemoryAllocator: nil,
             flags: kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment,
