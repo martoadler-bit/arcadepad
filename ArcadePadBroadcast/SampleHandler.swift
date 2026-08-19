@@ -48,8 +48,9 @@ final class SampleHandler: RPBroadcastSampleHandler {
         do {
             try audioFile?.write(from: pcmBuffer)
             bufferCount += 1
-            if bufferCount % 100 == 0 {
-                Self.log.notice("processSampleBuffer: wrote \(self.bufferCount) buffers so far")
+            if bufferCount % 100 == 1 {
+                let peak = Self.peakAmplitude(of: pcmBuffer)
+                Self.log.notice("processSampleBuffer: wrote \(self.bufferCount) buffers so far, peak amplitude = \(peak, privacy: .public)")
             }
         } catch {
             Self.log.error("processSampleBuffer: write failed: \(String(describing: error), privacy: .public)")
@@ -59,12 +60,32 @@ final class SampleHandler: RPBroadcastSampleHandler {
     override func broadcastFinished() {
         Self.log.notice("broadcastFinished: total buffers written = \(self.bufferCount)")
         audioFile = nil
+        if let audioURL = Self.audioURL(),
+           let attrs = try? FileManager.default.attributesOfItem(atPath: audioURL.path),
+           let size = attrs[.size] as? Int {
+            Self.log.notice("broadcastFinished: audio file size = \(size, privacy: .public) bytes")
+        }
         guard let markerURL = Self.markerURL() else {
             Self.log.error("broadcastFinished: App Group container is nil, can't write marker")
             return
         }
         let created = FileManager.default.createFile(atPath: markerURL.path, contents: Data())
         Self.log.notice("broadcastFinished: marker written = \(created) at \(markerURL.path, privacy: .public)")
+    }
+
+    private static func peakAmplitude(of buffer: AVAudioPCMBuffer) -> Float {
+        let n = Int(buffer.frameLength)
+        if let data = buffer.floatChannelData?[0] {
+            var peak: Float = 0
+            for i in 0..<n { peak = max(peak, abs(data[i])) }
+            return peak
+        }
+        if let data = buffer.int16ChannelData?[0] {
+            var peak: Int16 = 0
+            for i in 0..<n { peak = max(peak, abs(data[i])) }
+            return Float(peak) / Float(Int16.max)
+        }
+        return -1
     }
 
     // MARK: Shared container
