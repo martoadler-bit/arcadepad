@@ -7,7 +7,9 @@ struct RecordView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var audio = AudioEngine.shared
 
-    @State private var source: RecordingSource = .microphone
+    // Defaults to whatever source was used last time, so returning users who mainly capture
+    // System Audio don't have to re-tap the segmented control every time they open Record.
+    @State private var source: RecordingSource = Self.lastUsedSource
     @State private var recordedURL: URL?
     @State private var recordedDuration: TimeInterval = 0
     @State private var sampleName = ""
@@ -55,9 +57,19 @@ struct RecordView: View {
         }
         .preferredColorScheme(.dark)
         .onAppear { requestMicPermission() }
+        .onChange(of: source) { _, newValue in
+            UserDefaults.standard.set(newValue.rawValue, forKey: Self.lastUsedSourceKey)
+        }
         .onReceive(broadcastPollTimer) { _ in
             checkForFinishedBroadcast()
         }
+    }
+
+    private static let lastUsedSourceKey = "RecordView.lastUsedSource"
+
+    private static var lastUsedSource: RecordingSource {
+        UserDefaults.standard.string(forKey: lastUsedSourceKey)
+            .flatMap(RecordingSource.init(rawValue:)) ?? .microphone
     }
 
     private var sourcePicker: some View {
