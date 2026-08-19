@@ -6,6 +6,7 @@ struct PadEditorView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var peaks: [Float] = []
     @State private var isRerecording = false
+    @State private var isPickingDuplicateTarget = false
 
     private var padBinding: Binding<Pad> {
         Binding(
@@ -51,6 +52,13 @@ struct PadEditorView: View {
         .preferredColorScheme(.dark)
         .sheet(isPresented: $isRerecording) {
             RecordView(padIndex: padIndex).environmentObject(kitStore)
+        }
+        .sheet(isPresented: $isPickingDuplicateTarget) {
+            DuplicatePadTargetView(sourceIndex: padIndex) { destIndex in
+                kitStore.duplicatePad(from: padIndex, to: destIndex)
+                isPickingDuplicateTarget = false
+            }
+            .environmentObject(kitStore)
         }
         .onAppear(perform: loadWaveform)
     }
@@ -155,6 +163,15 @@ struct PadEditorView: View {
                     .frame(maxWidth: .infinity, minHeight: 44)
             }
             .buttonStyle(ArcadeButtonStyle(color: ArcadeTheme.padColor(2)))
+
+            Button {
+                isPickingDuplicateTarget = true
+            } label: {
+                Text("DUPLICATE TO...")
+                    .font(ArcadeTheme.labelFont)
+                    .frame(maxWidth: .infinity, minHeight: 44)
+            }
+            .buttonStyle(ArcadeButtonStyle(color: ArcadeTheme.padColor(4)))
 
             Button(role: .destructive) {
                 clearPad(sample: sample)

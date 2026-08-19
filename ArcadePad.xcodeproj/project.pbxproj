@@ -54,6 +54,7 @@
 		DBC00F64C7F8152E25FA963F /* BroadcastPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2710DF68EF3E25CFBE0CEB /* BroadcastPickerView.swift */; };
 		DCA3709AFDA5C167B22F628F /* Ka.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9BE23E1AA3201D92FED55D76 /* Ka.wav */; };
 		E5469B17F9E1531CF743480E /* crash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F70E032484A048F6EAF5F337 /* crash.mp3 */; };
+		E595AA80C741B422EE109BC4 /* DuplicatePadTargetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68354F0F711166C47428172F /* DuplicatePadTargetView.swift */; };
 		E84CF0167BF180DF3B6B5322 /* Ki.wav in Resources */ = {isa = PBXBuildFile; fileRef = AC11622F55D45F56259D3B11 /* Ki.wav */; };
 		E9100DA7E3B27E8FC07489C4 /* select.wav in Resources */ = {isa = PBXBuildFile; fileRef = F1B0DFBF37692F382520462C /* select.wav */; };
 		E9631204D575DDB9182E6416 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = F22E0EFD65DB5BD002895549 /* LICENSE.txt */; };
@@ -121,6 +122,7 @@
 		53E469FD31C8C234F9CFF3DA /* ArcadePadBroadcast.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = ArcadePadBroadcast.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		5825C330D1D18FAA940579FC /* ArcadePadUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadePadUITests.swift; sourceTree = "<group>"; };
 		5BE19669841D4B4AEA7C4F77 /* Di.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Di.wav; sourceTree = "<group>"; };
+		68354F0F711166C47428172F /* DuplicatePadTargetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicatePadTargetView.swift; sourceTree = "<group>"; };
 		7864022327BF8C56318461F0 /* StarterKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterKit.swift; sourceTree = "<group>"; };
 		78FB4592FEC8426F4196B25A /* Kit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kit.swift; sourceTree = "<group>"; };
 		7ADA695EAF2C1AFD9B92B504 /* snare.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = snare.mp3; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 			isa = PBXGroup;
 			children = (
 				E7C9A97892BB291BD77A2825 /* ContentView.swift */,
+				68354F0F711166C47428172F /* DuplicatePadTargetView.swift */,
 				A0BA8304082133A0A5355809 /* KitLibraryView.swift */,
 				F5DBF4350D8FE4E69E3ACFB7 /* PadEditorView.swift */,
 				B2BBCECD12C1188C50A4AD84 /* RecordView.swift */,
@@ -573,6 +576,7 @@
 				DBC00F64C7F8152E25FA963F /* BroadcastPickerView.swift in Sources */,
 				A817B2EE84D9EA6AA8ABF40F /* BroadcastRecorder.swift in Sources */,
 				E9BF6D505D60E61BFAB4C6AA /* ContentView.swift in Sources */,
+				E595AA80C741B422EE109BC4 /* DuplicatePadTargetView.swift in Sources */,
 				57CCD90C0DE11066BB0B4AAE /* Kit.swift in Sources */,
 				B0EC5233C425A8601FF27340 /* KitLibraryView.swift in Sources */,
 				2918B441C5D58E803809CC6F /* KitStore.swift in Sources */,

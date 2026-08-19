@@ -235,6 +235,46 @@ final class KitStore: ObservableObject {
         try? fileManager.removeItem(at: sampleURL(for: sample))
     }
 
+    /// Copies a pad's sample (audio file + settings) onto another pad. Each pad always owns its
+    /// own physical file — sharing a fileName between two pads would mean clearing/re-recording
+    /// one deletes the audio out from under the other.
+    func duplicatePad(from sourceIndex: Int, to destIndex: Int) {
+        guard sourceIndex != destIndex,
+              let sourcePad = kit.pads.first(where: { $0.index == sourceIndex }),
+              let sourceSample = sourcePad.sample,
+              let destArrayIndex = kit.pads.firstIndex(where: { $0.index == destIndex })
+        else { return }
+
+        let newFileName = "\(UUID().uuidString).\((sourceSample.fileName as NSString).pathExtension)"
+        let sourceURL = sampleURL(for: sourceSample)
+        let destURL = currentKitDirectory.appendingPathComponent(newFileName)
+        guard (try? fileManager.copyItem(at: sourceURL, to: destURL)) != nil else { return }
+
+        if let existingSample = kit.pads[destArrayIndex].sample {
+            deleteSampleFile(existingSample)
+        }
+
+        let newSample = Sample(
+            name: sourceSample.name,
+            fileName: newFileName,
+            duration: sourceSample.duration,
+            trimStart: sourceSample.trimStart,
+            trimEnd: sourceSample.trimEnd,
+            gainDB: sourceSample.gainDB
+        )
+
+        kit.pads[destArrayIndex] = Pad(
+            index: destIndex,
+            sample: newSample,
+            mode: sourcePad.mode,
+            pitchSemitones: sourcePad.pitchSemitones,
+            volume: sourcePad.volume,
+            chokeGroup: sourcePad.chokeGroup,
+            effects: sourcePad.effects,
+            colorIndex: kit.pads[destArrayIndex].colorIndex
+        )
+    }
+
     private static func audioDuration(of url: URL) -> TimeInterval {
         guard let file = try? AVAudioFile(forReading: url) else { return 0 }
         return Double(file.length) / file.processingFormat.sampleRate
