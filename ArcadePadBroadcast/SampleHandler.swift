@@ -12,6 +12,8 @@ final class SampleHandler: RPBroadcastSampleHandler {
     private static let log = Logger(subsystem: "com.dlrk.arcadepad.broadcast", category: "SampleHandler")
 
     private var audioFile: AVAudioFile?
+    private var converter: AVAudioConverter?
+    private var outputFormat: AVAudioFormat?
     private var bufferCount = 0
 
     override func broadcastStarted(withSetupInfo setupInfo: [String: NSObject]?) {
@@ -27,6 +29,10 @@ final class SampleHandler: RPBroadcastSampleHandler {
         if let markerURL = Self.markerURL() {
             try? FileManager.default.removeItem(at: markerURL)
         }
+        audioFile = nil
+        converter = nil
+        outputFormat = nil
+        bufferCount = 0
     }
 
     override func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, with sampleBufferType: RPSampleBufferType) {
@@ -37,19 +43,58 @@ final class SampleHandler: RPBroadcastSampleHandler {
             return
         }
 
+        // ReplayKit hands us audio in whatever raw hardware format the source app used — here
+        // 16-bit big-endian integer PCM, which AVAudioFile.write(from:) cannot write directly
+        // (fails with OSStatus -50/paramErr on every call). Convert every buffer to a canonical
+        // Float32 format before writing; that's the format we open the file with too.
         if audioFile == nil {
+            guard let canonicalFormat = AVAudioFormat(
+                commonFormat: .pcmFormatFloat32,
+                sampleRate: pcmBuffer.format.sampleRate,
+                channels: pcmBuffer.format.channelCount,
+                interleaved: false
+            ), let converter = AVAudioConverter(from: pcmBuffer.format, to: canonicalFormat) else {
+                Self.log.error("processSampleBuffer: failed to build canonical format/converter for \(pcmBuffer.format.description, privacy: .public)")
+                return
+            }
+            self.outputFormat = canonicalFormat
+            self.converter = converter
             do {
-                audioFile = try AVAudioFile(forWriting: audioURL, settings: pcmBuffer.format.settings)
-                Self.log.notice("processSampleBuffer: opened audio file at \(audioURL.path, privacy: .public), format: \(pcmBuffer.format.description, privacy: .public)")
+                audioFile = try AVAudioFile(forWriting: audioURL, settings: canonicalFormat.settings)
+                Self.log.notice("processSampleBuffer: opened audio file at \(audioURL.path, privacy: .public), source format: \(pcmBuffer.format.description, privacy: .public), writing as: \(canonicalFormat.description, privacy: .public)")
             } catch {
                 Self.log.error("processSampleBuffer: failed to open audio file: \(String(describing: error), privacy: .public)")
+                return
             }
         }
+
+        guard let converter, let outputFormat,
+              let convertedBuffer = AVAudioPCMBuffer(pcmFormat: outputFormat, frameCapacity: pcmBuffer.frameCapacity) else {
+            Self.log.error("processSampleBuffer: missing converter/outputFormat or failed to allocate converted buffer")
+            return
+        }
+
+        var conversionError: NSError?
+        var suppliedInput = false
+        let status = converter.convert(to: convertedBuffer, error: &conversionError) { _, outStatus in
+            if suppliedInput {
+                outStatus.pointee = .noDataNow
+                return nil
+            }
+            suppliedInput = true
+            outStatus.pointee = .haveData
+            return pcmBuffer
+        }
+        guard status != .error else {
+            Self.log.error("processSampleBuffer: conversion failed: \(String(describing: conversionError), privacy: .public)")
+            return
+        }
+
         do {
-            try audioFile?.write(from: pcmBuffer)
+            try audioFile?.write(from: convertedBuffer)
             bufferCount += 1
             if bufferCount % 100 == 1 {
-                let peak = Self.peakAmplitude(of: pcmBuffer)
+                let peak = Self.peakAmplitude(of: convertedBuffer)
                 Self.log.notice("processSampleBuffer: wrote \(self.bufferCount) buffers so far, peak amplitude = \(peak, privacy: .public)")
             }
         } catch {
