@@ -118,7 +118,7 @@
 		41E3DB7455E0504339ABDE4B /* ArcadePadUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ArcadePadUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		42B28CB88B6A0AB5023D278B /* ShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareService.swift; sourceTree = "<group>"; };
 		4E73254BC37C58C8F97FE002 /* Pattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pattern.swift; sourceTree = "<group>"; };
-		53E469FD31C8C234F9CFF3DA /* ArcadePadBroadcast.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = ArcadePadBroadcast.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		53E469FD31C8C234F9CFF3DA /* ArcadePadBroadcast.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ArcadePadBroadcast.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		5825C330D1D18FAA940579FC /* ArcadePadUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadePadUITests.swift; sourceTree = "<group>"; };
 		5BE19669841D4B4AEA7C4F77 /* Di.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Di.wav; sourceTree = "<group>"; };
 		7864022327BF8C56318461F0 /* StarterKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterKit.swift; sourceTree = "<group>"; };
@@ -476,7 +476,6 @@
 						ProvisioningStyle = Automatic;
 					};
 					F636D3E5B93B882A2F69061C = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -758,6 +757,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ArcadePadBroadcast/ArcadePadBroadcast.entitlements;
+				DEVELOPMENT_TEAM = 228T6U2RV4;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ArcadePadBroadcast/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -807,6 +807,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ArcadePadBroadcast/ArcadePadBroadcast.entitlements;
+				DEVELOPMENT_TEAM = 228T6U2RV4;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ArcadePadBroadcast/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
