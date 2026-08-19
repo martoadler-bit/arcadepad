@@ -11,9 +11,7 @@ struct BroadcastPickerView: UIViewRepresentable {
         // The system glyph renders using tintColor — against our dark cabinet background it's
         // otherwise invisible (defaults to near-black).
         picker.tintColor = .white
-        // TEMP DEBUG: bright background so we can tell "view exists but icon is invisible"
-        // apart from "view has zero size" while diagnosing why the button isn't showing.
-        picker.backgroundColor = .systemRed
+        picker.backgroundColor = .clear
         return picker
     }
 
