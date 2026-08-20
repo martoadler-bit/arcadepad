@@ -15,8 +15,8 @@ enum JoystickAssignment: String, CaseIterable, Identifiable, Codable {
     case filter = "FILTER"
     case reverb = "REVERB"
     case delay = "DELAY"
-    case pitchBend = "PITCH BEND"
-    case reverse = "REVERSE"
+    case pitchBend = "BEND"
+    case reverse = "REV"
 
     var id: String { rawValue }
 }

@@ -57,11 +57,11 @@ struct SequencerView: View {
     private func stepRow(for pad: Pad) -> some View {
         let steps = kitStore.kit.pattern.steps(forPad: pad.index)
         return HStack(spacing: 4) {
-            Text(pad.sample?.name ?? "Pad \(pad.index + 1)")
-                .font(.caption2)
-                .foregroundStyle(.white.opacity(0.7))
-                .frame(width: 70, alignment: .leading)
-                .lineLimit(1)
+            Image("ButtonUnpressed_\(ArcadeTheme.padColorName(pad.colorIndex))")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 26, height: 26)
+                .opacity(pad.isEmpty ? 0.3 : 1)
 
             ForEach(Array(steps.enumerated()), id: \.offset) { stepIndex, step in
                 Button {

@@ -1,6 +1,6 @@
 {
   "images" : [
-    { "filename" : "joystick_knob.png", "idiom" : "universal" }
+    { "filename" : "joystick_up.png", "idiom" : "universal" }
   ],
   "info" : { "author" : "xcode", "version" : 1 }
 }

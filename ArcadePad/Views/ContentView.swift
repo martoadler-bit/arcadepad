@@ -152,47 +152,35 @@ struct ContentView: View {
     }
 
     private var performanceJoystickBar: some View {
-        HStack(spacing: 16) {
-            JoystickView { direction in
-                joystickDirection = direction
-            }
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text("PERFORMANCE").font(.caption2).foregroundStyle(.white.opacity(0.4))
-
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 6) {
-                        ForEach(JoystickAssignment.allCases) { assignment in
-                            Button {
-                                joystickAssignment = assignment
-                            } label: {
-                                Text(assignment.rawValue)
-                                    .font(.caption2.bold())
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 6)
-                                    .background(
-                                        Capsule().fill(
-                                            assignment == joystickAssignment
-                                                ? ArcadeTheme.marqueeText
-                                                : ArcadeTheme.panelBackground
-                                        )
-                                    )
-                                    .foregroundStyle(assignment == joystickAssignment ? .black : .white.opacity(0.7))
-                            }
-                        }
-                    }
+        VStack(spacing: 10) {
+            HStack(spacing: 16) {
+                JoystickView { direction in
+                    joystickDirection = direction
                 }
 
-                Text(statusText)
-                    .font(.caption2.monospaced())
-                    .foregroundStyle(joystickDirection == .center ? .white.opacity(0.4) : ArcadeTheme.marqueeText)
-                    .animation(.easeOut(duration: 0.1), value: joystickDirection)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("PERFORMANCE").font(.caption2).foregroundStyle(.white.opacity(0.4))
+                    Text(statusText)
+                        .font(.caption2.monospaced())
+                        .foregroundStyle(joystickDirection == .center ? .white.opacity(0.4) : ArcadeTheme.marqueeText)
+                        .animation(.easeOut(duration: 0.1), value: joystickDirection)
+                }
+
+                Spacer()
             }
 
-            Spacer()
+            // A native segmented Picker — the same reliably-tappable control already used
+            // for the record-source and pad-mode pickers elsewhere in the app — instead of
+            // custom Buttons in a scroll/grid, which turned out not to register taps.
+            Picker("Assignment", selection: $joystickAssignment) {
+                ForEach(JoystickAssignment.allCases) { assignment in
+                    Text(assignment.rawValue).tag(assignment)
+                }
+            }
+            .pickerStyle(.segmented)
         }
         .padding(.horizontal)
-        .padding(.bottom, 12)
+        .padding(.bottom, 20)
         .onChange(of: joystickAssignment) { _, newValue in
             UserDefaults.standard.set(newValue.rawValue, forKey: Self.lastAssignmentKey)
         }
