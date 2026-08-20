@@ -12,6 +12,8 @@ struct ContentView: View {
     @State private var showKitLibrary = false
     @State private var showRenamePrompt = false
     @State private var renameText = ""
+    @State private var joystickDirection: JoystickDirection = .center
+    @State private var joystickAssignment: JoystickAssignment = Self.lastAssignment
 
     var body: some View {
         NavigationStack {
@@ -37,6 +39,8 @@ struct ContentView: View {
                         .padding(.horizontal)
                         .padding(.bottom, 24)
                     }
+
+                    performanceJoystickBar
                 }
             }
             .navigationTitle("ARCADEPAD")
@@ -123,19 +127,131 @@ struct ContentView: View {
         audio.play(
             sample: url,
             padIndex: pad.index,
-            mode: pad.mode,
-            pitchSemitones: pad.pitchSemitones,
+            mode: performanceMode(for: pad),
+            pitchSemitones: pad.pitchSemitones + performancePitchOffset,
             volume: pad.volume,
             trimStart: sample.trimStart,
             trimEnd: sample.trimEnd
         )
-        audio.applyEffects(pad.effects, toPad: pad.index)
+        audio.applyEffects(performanceEffects(for: pad), toPad: pad.index)
         activePads.insert(pad.index)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
             if pad.mode != .loop {
                 activePads.remove(pad.index)
             }
         }
+    }
+
+    // MARK: Performance joystick
+
+    private static let lastAssignmentKey = "ContentView.lastJoystickAssignment"
+
+    private static var lastAssignment: JoystickAssignment {
+        UserDefaults.standard.string(forKey: lastAssignmentKey)
+            .flatMap(JoystickAssignment.init(rawValue:)) ?? .none
+    }
+
+    private var performanceJoystickBar: some View {
+        HStack(spacing: 16) {
+            JoystickView { direction in
+                joystickDirection = direction
+            }
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text("PERFORMANCE").font(.caption2).foregroundStyle(.white.opacity(0.4))
+
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 6) {
+                        ForEach(JoystickAssignment.allCases) { assignment in
+                            Button {
+                                joystickAssignment = assignment
+                            } label: {
+                                Text(assignment.rawValue)
+                                    .font(.caption2.bold())
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 6)
+                                    .background(
+                                        Capsule().fill(
+                                            assignment == joystickAssignment
+                                                ? ArcadeTheme.marqueeText
+                                                : ArcadeTheme.panelBackground
+                                        )
+                                    )
+                                    .foregroundStyle(assignment == joystickAssignment ? .black : .white.opacity(0.7))
+                            }
+                        }
+                    }
+                }
+
+                Text(statusText)
+                    .font(.caption2.monospaced())
+                    .foregroundStyle(joystickDirection == .center ? .white.opacity(0.4) : ArcadeTheme.marqueeText)
+                    .animation(.easeOut(duration: 0.1), value: joystickDirection)
+            }
+
+            Spacer()
+        }
+        .padding(.horizontal)
+        .padding(.bottom, 12)
+        .onChange(of: joystickAssignment) { _, newValue in
+            UserDefaults.standard.set(newValue.rawValue, forKey: Self.lastAssignmentKey)
+        }
+    }
+
+    private var statusText: String {
+        guard joystickAssignment != .none else { return "Pick a parameter above to arm the joystick." }
+        guard joystickDirection != .center else { return "Hold a direction while you tap a pad." }
+        switch joystickAssignment {
+        case .none:
+            return ""
+        case .filter:
+            let open = joystickDirection == .up || joystickDirection == .right
+            return open ? "FILTER → wide open" : "FILTER → muffled"
+        case .reverb:
+            let wet = joystickDirection == .up || joystickDirection == .right
+            return wet ? "REVERB → full wash" : "REVERB → dry"
+        case .delay:
+            let wet = joystickDirection == .up || joystickDirection == .right
+            return wet ? "DELAY → full echo" : "DELAY → dry"
+        case .pitchBend:
+            let up = joystickDirection == .up || joystickDirection == .right
+            return up ? "PITCH → +7 semitones" : "PITCH → −7 semitones"
+        case .reverse:
+            return "REVERSE → next hit plays backwards"
+        }
+    }
+
+    /// Only "reverse" overrides the pad's own playback mode — the others layer a live effects
+    /// tweak on top without changing how the sample itself is triggered.
+    private func performanceMode(for pad: Pad) -> PlaybackMode {
+        guard joystickAssignment == .reverse, joystickDirection != .center else { return pad.mode }
+        return .reverse
+    }
+
+    private var performancePitchOffset: Double {
+        guard joystickAssignment == .pitchBend else { return 0 }
+        switch joystickDirection {
+        case .up, .right: return 7
+        case .down, .left: return -7
+        case .center: return 0
+        }
+    }
+
+    private func performanceEffects(for pad: Pad) -> EffectSettings {
+        var effects = pad.effects
+        guard joystickDirection != .center else { return effects }
+        let boosted = (joystickDirection == .up || joystickDirection == .right)
+        switch joystickAssignment {
+        case .filter:
+            effects.filterCutoff = boosted ? 1.0 : 0.05
+        case .reverb:
+            effects.reverbMix = boosted ? 1.0 : 0.0
+        case .delay:
+            effects.delayMix = boosted ? 1.0 : 0.0
+        case .none, .pitchBend, .reverse:
+            break
+        }
+        return effects
     }
 
     private var gridSizeBinding: Binding<GridSize> {

@@ -37,6 +37,8 @@ struct Pad: Identifiable, Codable, Equatable {
     var chokeGroup: Int?
     var effects: EffectSettings
     var colorIndex: Int
+    /// User-set text shown under the pad instead of its number. Nil shows "index + 1".
+    var customLabel: String?
 
     init(
         id: UUID = UUID(),
@@ -47,7 +49,8 @@ struct Pad: Identifiable, Codable, Equatable {
         volume: Double = 1,
         chokeGroup: Int? = nil,
         effects: EffectSettings = .none,
-        colorIndex: Int = 0
+        colorIndex: Int = 0,
+        customLabel: String? = nil
     ) {
         self.id = id
         self.index = index
@@ -58,7 +61,9 @@ struct Pad: Identifiable, Codable, Equatable {
         self.chokeGroup = chokeGroup
         self.effects = effects
         self.colorIndex = colorIndex
+        self.customLabel = customLabel
     }
 
     var isEmpty: Bool { sample == nil }
+    var displayLabel: String { customLabel?.isEmpty == false ? customLabel! : "\(index + 1)" }
 }

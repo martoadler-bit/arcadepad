@@ -235,6 +235,36 @@ final class KitStore: ObservableObject {
         try? fileManager.removeItem(at: sampleURL(for: sample))
     }
 
+    /// Copies the full-length source recording onto a pad, trimmed to one slice of it — used to
+    /// split one long recording across several pads. Each pad still gets its own physical file
+    /// (copied, not shared), even though they all point at the same underlying audio.
+    func assignSplitSegment(
+        from sourceURL: URL,
+        name: String,
+        duration: TimeInterval,
+        trimStart: Double,
+        trimEnd: Double,
+        toPadIndex padIndex: Int
+    ) throws {
+        guard let destArrayIndex = kit.pads.firstIndex(where: { $0.index == padIndex }) else { return }
+
+        let newFileName = "\(UUID().uuidString).\(sourceURL.pathExtension)"
+        let destURL = currentKitDirectory.appendingPathComponent(newFileName)
+        try fileManager.copyItem(at: sourceURL, to: destURL)
+
+        if let existingSample = kit.pads[destArrayIndex].sample {
+            deleteSampleFile(existingSample)
+        }
+
+        kit.pads[destArrayIndex].sample = Sample(
+            name: name,
+            fileName: newFileName,
+            duration: duration,
+            trimStart: trimStart,
+            trimEnd: trimEnd
+        )
+    }
+
     /// Copies a pad's sample (audio file + settings) onto another pad. Each pad always owns its
     /// own physical file — sharing a fileName between two pads would mean clearing/re-recording
     /// one deletes the audio out from under the other.

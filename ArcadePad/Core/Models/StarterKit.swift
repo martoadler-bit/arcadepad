@@ -163,14 +163,14 @@ struct StarterKit: Identifiable {
             category: .streamer,
             gridSize: .eight,
             pads: [
-                PadDefinition(name: "Airhorn", resource: "airhorn", ext: "wav"),
-                PadDefinition(name: "Buzzer", resource: "buzzer", ext: "wav"),
-                PadDefinition(name: "Drumroll", resource: "drumroll", ext: "wav"),
-                PadDefinition(name: "Applause", resource: "applause", ext: "wav"),
-                PadDefinition(name: "Success", resource: "success_chime", ext: "wav"),
-                PadDefinition(name: "Fail", resource: "fail_descend", ext: "wav"),
-                PadDefinition(name: "Alert", resource: "alert_beep", ext: "wav"),
-                PadDefinition(name: "Scratch", resource: "record_scratch", ext: "wav"),
+                PadDefinition(name: "Airhorn", resource: "airhorn", ext: "mp3"),
+                PadDefinition(name: "Duck Quack", resource: "duck_quack", ext: "mp3"),
+                PadDefinition(name: "Sad Trombone", resource: "sad_trombone", ext: "mp3"),
+                PadDefinition(name: "Drumroll", resource: "drumroll", ext: "mp3"),
+                PadDefinition(name: "Applause", resource: "applause", ext: "mp3"),
+                PadDefinition(name: "Success", resource: "success_chime", ext: "mp3"),
+                PadDefinition(name: "Buzzer", resource: "buzzer", ext: "mp3"),
+                PadDefinition(name: "Scratch", resource: "record_scratch", ext: "mp3"),
             ]
         ),
     ]

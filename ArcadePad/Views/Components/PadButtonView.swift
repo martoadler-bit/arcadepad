@@ -6,29 +6,49 @@ struct PadButtonView: View {
     let onTrigger: () -> Void
     let onLongPress: () -> Void
 
+    @EnvironmentObject var kitStore: KitStore
+    @State private var isRenaming = false
+    @State private var renameText = ""
+
     var body: some View {
-        Button(action: onTrigger) {
-            VStack(spacing: 4) {
-                Text(labelText)
+        VStack(spacing: 6) {
+            Button(action: onTrigger) {
+                Color.clear
+                    .frame(minWidth: 76, minHeight: 76)
+                    .aspectRatio(1, contentMode: .fit)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(PadImageButtonStyle(colorName: ArcadeTheme.padColorName(pad.colorIndex), isActive: isPlaying))
+            .simultaneousGesture(
+                LongPressGesture(minimumDuration: 0.45).onEnded { _ in onLongPress() }
+            )
+            .opacity(pad.isEmpty ? 0.35 : 1.0)
+
+            Button {
+                renameText = pad.customLabel ?? ""
+                isRenaming = true
+            } label: {
+                Text(pad.displayLabel)
                     .font(ArcadeTheme.labelFont)
-                    .foregroundStyle(.black.opacity(0.75))
+                    .foregroundStyle(.white.opacity(0.8))
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
-                Text("\(pad.index + 1)")
-                    .font(ArcadeTheme.displayFont)
-                    .foregroundStyle(.black.opacity(0.85))
             }
-            .padding(8)
-            .frame(maxWidth: .infinity, minHeight: 76)
         }
-        .buttonStyle(ArcadeButtonStyle(color: ArcadeTheme.padColor(pad.colorIndex), isActive: isPlaying))
-        .simultaneousGesture(
-            LongPressGesture(minimumDuration: 0.45).onEnded { _ in onLongPress() }
-        )
-        .opacity(pad.isEmpty ? 0.35 : 1.0)
+        .alert("Rename pad", isPresented: $isRenaming) {
+            TextField("Pad \(pad.index + 1)", text: $renameText)
+            Button("Save") { save() }
+            Button("Use Number", role: .destructive) {
+                renameText = ""
+                save()
+            }
+            Button("Cancel", role: .cancel) {}
+        }
     }
 
-    private var labelText: String {
-        pad.sample?.name ?? "EMPTY"
+    private func save() {
+        guard let idx = kitStore.kit.pads.firstIndex(where: { $0.index == pad.index }) else { return }
+        let trimmed = renameText.trimmingCharacters(in: .whitespacesAndNewlines)
+        kitStore.kit.pads[idx].customLabel = trimmed.isEmpty ? nil : trimmed
     }
 }

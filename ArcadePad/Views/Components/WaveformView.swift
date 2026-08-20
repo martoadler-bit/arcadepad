@@ -7,22 +7,26 @@ struct WaveformView: View {
     var color: Color = ArcadeTheme.marqueeText
 
     var body: some View {
-        GeometryReader { geo in
-            let width = geo.size.width
-            let height = geo.size.height
-            let barWidth = max(1.0, width / CGFloat(max(peaks.count, 1)))
+        // Drawn with Canvas (not an HStack of bars) so the whole waveform always fits exactly
+        // inside the given width, however long the recording is — an HStack's inter-bar spacing
+        // was pushing the tail end of long waveforms past the right edge of the screen.
+        Canvas { context, size in
+            guard !peaks.isEmpty else { return }
+            let slotWidth = size.width / CGFloat(peaks.count)
+            let barWidth = max(1.0, slotWidth - 1)
 
-            ZStack(alignment: .leading) {
-                HStack(alignment: .center, spacing: 1) {
-                    ForEach(Array(peaks.enumerated()), id: \.offset) { index, peak in
-                        let inTrim = Double(index) / Double(max(peaks.count - 1, 1)) >= trimStart
-                            && Double(index) / Double(max(peaks.count - 1, 1)) <= trimEnd
-                        RoundedRectangle(cornerRadius: 1)
-                            .fill(inTrim ? color : color.opacity(0.25))
-                            .frame(width: barWidth, height: max(2, CGFloat(peak) * height))
-                    }
-                }
-                .frame(height: height)
+            for (index, peak) in peaks.enumerated() {
+                let position = Double(index) / Double(max(peaks.count - 1, 1))
+                let inTrim = position >= trimStart && position <= trimEnd
+                let barHeight = max(2, CGFloat(peak) * size.height)
+                let rect = CGRect(
+                    x: CGFloat(index) * slotWidth,
+                    y: (size.height - barHeight) / 2,
+                    width: barWidth,
+                    height: barHeight
+                )
+                let path = Path(roundedRect: rect, cornerRadius: 1)
+                context.fill(path, with: .color(inTrim ? color : color.opacity(0.25)))
             }
         }
     }

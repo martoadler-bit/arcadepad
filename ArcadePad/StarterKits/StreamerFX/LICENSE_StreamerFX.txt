@@ -1,0 +1,18 @@
+Factory sample credits
+=======================
+
+Every file in this folder is dedicated to the public domain under the
+Creative Commons CC0 1.0 Universal license (no attribution required):
+https://creativecommons.org/publicdomain/zero/1.0/
+
+airhorn.mp3         "DJ airhorn sound"                          by pfranzen          https://freesound.org/s/528807/
+duck_quack.mp3      "single quack from a duck"                  by Mikes-MultiMedia  https://freesound.org/s/418509/
+sad_trombone.mp3    "wah wah sad trombone.wav"                  by kirbydx           https://freesound.org/s/175409/
+buzzer.mp3          "Wrong Answer"                               by -Andreas          https://freesound.org/s/648462/
+applause.mp3        "Small Auditorium Crowd Applause and Cheering" by ElevatorFan2020 https://freesound.org/s/859009/
+drumroll.mp3        "Drum Roll, Please!"                        by HoBoTrails        https://freesound.org/s/424927/
+record_scratch.mp3  "record_scratch.wav"                        by ludvique          https://freesound.org/s/71853/
+success_chime.mp3   "TaDa!.wav"                                  by jimhancock        https://freesound.org/s/376318/
+
+Downloaded from Freesound.org's CC0-tagged preview stream (low-quality MP3);
+used as-is for a lightweight, ready-to-tap starter kit.

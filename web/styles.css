@@ -58,54 +58,66 @@ h1 {
   grid-template-columns: repeat(var(--cols, 4), 1fr);
 }
 
-.pad {
-  position: relative;
-  aspect-ratio: 1;
-  border-radius: 12px;
-  border: 3px solid rgba(0, 0, 0, 0.55);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+.cell {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 3px;
+  gap: 6px;
+}
+
+.pad {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border: none;
+  background: none;
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
-  transition: transform 0.08s ease-out, filter 0.08s ease-out;
-  font-family: "SF Mono", "Menlo", monospace;
+  transition: transform 0.07s ease-out;
 }
 
 .pad:active,
 .pad.playing {
-  transform: scale(0.96) translateY(2px);
-  filter: brightness(0.9);
+  transform: scale(0.97);
 }
 
-.pad .name {
-  font-size: 0.62rem;
-  font-weight: 700;
-  color: rgba(0, 0, 0, 0.75);
-  max-width: 88%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.pad.empty {
+  cursor: default;
+  opacity: 0.35;
 }
 
-.pad .index {
-  font-size: 1.15rem;
-  font-weight: 900;
-  color: rgba(0, 0, 0, 0.85);
-}
-
-.pad .mode {
+.pad-art {
   position: absolute;
-  bottom: 5px;
-  font-size: 0.5rem;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.pad-art.pressed {
+  opacity: 0;
+}
+
+.pad:active .pad-art.unpressed,
+.pad.playing .pad-art.unpressed {
+  opacity: 0;
+}
+
+.pad:active .pad-art.pressed,
+.pad.playing .pad-art.pressed {
+  opacity: 1;
+}
+
+.pad-label {
+  font-family: "SF Mono", "Menlo", monospace;
+  font-size: 0.85rem;
   font-weight: 700;
-  color: rgba(0, 0, 0, 0.55);
-  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .state {

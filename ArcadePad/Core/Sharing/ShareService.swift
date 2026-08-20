@@ -51,8 +51,11 @@ final class ShareService {
             let localURL = kitStore.sampleURL(for: sample)
             // Recordings are saved as .caf, which only Safari's Web Audio can decode —
             // Chrome and Firefox reject it outright. Convert to 16-bit PCM WAV, which every
-            // browser's decodeAudioData understands.
-            let audioData = try Self.wavData(fromLocalFile: localURL)
+            // browser's decodeAudioData understands. Only the trimmed window is exported —
+            // uploading the whole source file (and relying on the web player to trim client
+            // side) meant a heavily-trimmed sample, or one of several pads split from the same
+            // long recording, uploaded and re-downloaded far more audio than it ever plays.
+            let audioData = try Self.wavData(fromLocalFile: localURL, trimStart: sample.trimStart, trimEnd: sample.trimEnd)
             guard audioData.count <= Self.maxSampleBytes else {
                 throw ShareError.sampleTooLarge(sample.name)
             }
@@ -70,8 +73,10 @@ final class ShareService {
                     mode: pad.mode,
                     pitchSemitones: pad.pitchSemitones,
                     volume: pad.volume,
-                    trimStart: sample.trimStart,
-                    trimEnd: sample.trimEnd,
+                    // The uploaded audio is already trimmed to this exact window, so the web
+                    // player plays it in full — 0...1, not the pad's own (pre-crop) trim values.
+                    trimStart: 0,
+                    trimEnd: 1,
                     colorIndex: pad.colorIndex,
                     audioURL: downloadURL
                 )
@@ -148,15 +153,22 @@ final class ShareService {
         return String((0..<length).map { _ in alphabet.randomElement()! })
     }
 
-    /// Reads a local recording and re-encodes it as 16-bit PCM WAV for universal browser support.
-    private static func wavData(fromLocalFile sourceURL: URL) throws -> Data {
+    /// Reads the trimmed window of a local recording and re-encodes just that slice as 16-bit
+    /// PCM WAV for universal browser support — matches the same startFrame/endFrame math
+    /// AudioEngine.play() uses for on-device trim playback.
+    private static func wavData(fromLocalFile sourceURL: URL, trimStart: Double, trimEnd: Double) throws -> Data {
         let sourceFile = try AVAudioFile(forReading: sourceURL)
         let sourceFormat = sourceFile.processingFormat
-        let frameCount = AVAudioFrameCount(sourceFile.length)
+
+        let totalFrames = sourceFile.length
+        let startFrame = AVAudioFramePosition(Double(totalFrames) * trimStart)
+        let endFrame = AVAudioFramePosition(Double(totalFrames) * trimEnd)
+        let frameCount = AVAudioFrameCount(max(0, endFrame - startFrame))
         guard frameCount > 0, let sourceBuffer = AVAudioPCMBuffer(pcmFormat: sourceFormat, frameCapacity: frameCount) else {
             throw ShareError.uploadFailed("empty or unreadable recording")
         }
-        try sourceFile.read(into: sourceBuffer)
+        sourceFile.framePosition = startFrame
+        try sourceFile.read(into: sourceBuffer, frameCount: frameCount)
 
         guard let wavFormat = AVAudioFormat(
             commonFormat: .pcmFormatInt16,

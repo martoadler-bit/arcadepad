@@ -16,6 +16,10 @@ struct RecordView: View {
     @State private var recordStart: Date?
     @State private var micPermissionDenied = false
     @State private var recordingErrorMessage: String?
+    @State private var previewPlayer: AVAudioPlayer?
+    @State private var isPreviewPlaying = false
+    @State private var previewDelegate = PreviewPlayerDelegate()
+    @State private var isSplitting = false
 
     private let broadcastPollTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -62,6 +66,17 @@ struct RecordView: View {
         }
         .onReceive(broadcastPollTimer) { _ in
             checkForFinishedBroadcast()
+        }
+        .sheet(isPresented: $isSplitting) {
+            if let recordedURL {
+                SplitAudioView(
+                    sourceURL: recordedURL,
+                    sourceDuration: recordedDuration,
+                    baseName: sampleName.isEmpty ? "Pad \(padIndex + 1) Sample" : sampleName,
+                    onComplete: { dismiss() }
+                )
+                .environmentObject(kitStore)
+            }
         }
     }
 
@@ -149,6 +164,15 @@ struct RecordView: View {
                 .textFieldStyle(.roundedBorder)
 
             Button {
+                togglePreview(url: url)
+            } label: {
+                Label(isPreviewPlaying ? "STOP" : "PREVIEW", systemImage: isPreviewPlaying ? "stop.fill" : "play.fill")
+                    .font(ArcadeTheme.displayFont)
+                    .frame(maxWidth: .infinity, minHeight: 44)
+            }
+            .buttonStyle(ArcadeButtonStyle(color: ArcadeTheme.padColor(1)))
+
+            Button {
                 assignToPad(url: url)
             } label: {
                 Text("ASSIGN TO PAD \(padIndex + 1)")
@@ -156,6 +180,35 @@ struct RecordView: View {
                     .frame(maxWidth: .infinity, minHeight: 50)
             }
             .buttonStyle(ArcadeButtonStyle(color: ArcadeTheme.padColor(3)))
+
+            Button {
+                previewPlayer?.stop()
+                isPreviewPlaying = false
+                isSplitting = true
+            } label: {
+                Text("SPLIT ACROSS PADS…")
+                    .font(ArcadeTheme.labelFont)
+                    .frame(maxWidth: .infinity, minHeight: 44)
+            }
+            .buttonStyle(ArcadeButtonStyle(color: ArcadeTheme.padColor(4)))
+        }
+    }
+
+    private func togglePreview(url: URL) {
+        if isPreviewPlaying {
+            previewPlayer?.stop()
+            isPreviewPlaying = false
+            return
+        }
+        do {
+            let player = try AVAudioPlayer(contentsOf: url)
+            previewDelegate.onFinish = { isPreviewPlaying = false }
+            player.delegate = previewDelegate
+            previewPlayer = player
+            player.play()
+            isPreviewPlaying = true
+        } catch {
+            print("ArcadePad: preview playback failed: \(error)")
         }
     }
 
@@ -168,6 +221,8 @@ struct RecordView: View {
     }
 
     private func beginRecording() {
+        previewPlayer?.stop()
+        isPreviewPlaying = false
         recordedURL = nil
         recordingErrorMessage = nil
         recordStart = Date()
@@ -200,6 +255,7 @@ struct RecordView: View {
     }
 
     private func assignToPad(url: URL) {
+        previewPlayer?.stop()
         do {
             let sample = try kitStore.importRecording(from: url, name: sampleName, duration: recordedDuration)
             if let idx = kitStore.kit.pads.firstIndex(where: { $0.index == padIndex }) {
@@ -209,5 +265,13 @@ struct RecordView: View {
         } catch {
             print("ArcadePad: failed to assign recording: \(error)")
         }
+    }
+}
+
+private final class PreviewPlayerDelegate: NSObject, AVAudioPlayerDelegate {
+    var onFinish: (() -> Void)?
+
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        onFinish?()
     }
 }

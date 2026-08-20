@@ -1,5 +1,14 @@
-const PAD_COLORS = ["#FF3333", "#FF8C0D", "#FFD90D", "#26D959", "#1ABFF2", "#BF40FF"];
+// Matches ArcadeTheme.padColorNames in the iOS app — same order, same asset names, so a pad's
+// colorIndex maps to the identical button photo on both the app and this web player.
+const PAD_COLOR_NAMES = [
+  "Red", "Orange", "Amber", "Yellow", "Lime", "Green", "Emerald", "Cyan",
+  "Blue", "Indigo", "Violet", "Purple", "Magenta", "Pink", "Coral", "Teal",
+];
 const COLUMNS_BY_GRID_SIZE = { 4: 2, 8: 4, 12: 4, 16: 4 };
+
+function colorNameFor(colorIndex) {
+  return PAD_COLOR_NAMES[colorIndex % PAD_COLOR_NAMES.length];
+}
 const LINK_LIFETIME_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 function publicDownloadURL(path) {
@@ -16,6 +25,24 @@ class KitPlayer {
     this.audioContext = null;
     this.buffers = new Map(); // padIndex -> { forward: AudioBuffer, reversed: AudioBuffer|null }
     this.activeSources = new Map(); // padIndex -> AudioBufferSourceNode
+    this.loadPromises = new Map(); // padIndex -> Promise, so a tap during preload joins it instead of double-fetching
+  }
+
+  /// Kicks off (or joins) the fetch+decode for a pad and resolves once it's ready to play
+  /// instantly. Called for every pad right after the manifest loads, so by the time someone
+  /// actually taps a pad its buffer is already decoded — the fetch+decode round trip used to
+  /// only start on first tap, which is why that first hit always lagged.
+  ensureLoaded(pad) {
+    if (this.buffers.has(pad.index)) return Promise.resolve();
+    let promise = this.loadPromises.get(pad.index);
+    if (!promise) {
+      promise = this.loadPad(pad).catch((err) => {
+        this.loadPromises.delete(pad.index);
+        throw err;
+      });
+      this.loadPromises.set(pad.index, promise);
+    }
+    return promise;
   }
 
   ensureContext() {
@@ -156,47 +183,49 @@ async function main() {
   const player = new KitPlayer();
   const padsByIndex = new Map(manifest.pads.map((p) => [p.index, p]));
 
+  const loadable = [];
+
   for (let i = 0; i < manifest.gridSize; i++) {
     const pad = padsByIndex.get(i);
-    const el = document.createElement("div");
-    el.className = "pad";
+    const cell = document.createElement("div");
+    cell.className = "cell";
 
     if (!pad) {
-      el.style.background = "rgba(255,255,255,0.05)";
-      el.style.opacity = "0.35";
-      el.innerHTML = `<div class="name">EMPTY</div><div class="index">${i + 1}</div>`;
-      grid.appendChild(el);
+      cell.innerHTML = `
+        <div class="pad empty">
+          <img class="pad-art" src="assets/buttons/unpressed_${colorNameFor(0)}.png" alt="" />
+          <div class="pad-label">${i + 1}</div>
+        </div>
+      `;
+      grid.appendChild(cell);
       continue;
     }
 
-    el.style.background = PAD_COLORS[pad.colorIndex % PAD_COLORS.length];
-    el.innerHTML = `
-      <div class="name">${escapeHTML(pad.name)}</div>
-      <div class="index">${i + 1}</div>
-      <div class="mode">${pad.mode.toUpperCase()}</div>
+    const colorName = colorNameFor(pad.colorIndex);
+    cell.innerHTML = `
+      <button class="pad" type="button" aria-label="${escapeHTML(pad.name)}">
+        <img class="pad-art unpressed" src="assets/buttons/unpressed_${colorName}.png" alt="" />
+        <img class="pad-art pressed" src="assets/buttons/pressed_${colorName}.png" alt="" />
+      </button>
+      <div class="pad-label">${i + 1}</div>
     `;
-    grid.appendChild(el);
+    grid.appendChild(cell);
 
-    let loaded = false;
-    el.addEventListener("click", () => {
+    const button = cell.querySelector(".pad");
+    button.addEventListener("click", () => {
       player.unlockSync(); // must run synchronously in the click handler, before any await
-      el.classList.add("playing");
-      setTimeout(() => el.classList.remove("playing"), 150);
+      button.classList.add("playing");
+      setTimeout(() => button.classList.remove("playing"), 150);
 
-      (async () => {
-        if (!loaded) {
-          loaded = true;
-          try {
-            await player.loadPad(pad);
-          } catch (err) {
-            loaded = false;
-            return;
-          }
-        }
-        player.play(pad);
-      })();
+      player.ensureLoaded(pad).then(() => player.play(pad));
     });
+
+    loadable.push(pad);
   }
+
+  // Preload every pad's audio as soon as the grid is up, in parallel, so the *first* tap is
+  // as instant as every tap after it instead of paying the fetch+decode cost once per pad.
+  loadable.forEach((pad) => player.ensureLoaded(pad));
 }
 
 function escapeHTML(str) {
