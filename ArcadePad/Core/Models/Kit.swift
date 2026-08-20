@@ -42,7 +42,7 @@ struct Kit: Identifiable, Codable, Equatable {
         self.id = id
         self.name = name
         self.gridSize = gridSize
-        self.pads = pads ?? (0..<gridSize.rawValue).map { Pad(index: $0, colorIndex: $0 % 6) }
+        self.pads = pads ?? (0..<gridSize.rawValue).map { Pad(index: $0, colorIndex: $0 % ArcadeTheme.padColors.count) }
         self.pattern = pattern
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -50,7 +50,7 @@ struct Kit: Identifiable, Codable, Equatable {
 
     mutating func resizeGrid(to newSize: GridSize) {
         if newSize.rawValue > pads.count {
-            let additional = (pads.count..<newSize.rawValue).map { Pad(index: $0, colorIndex: $0 % 6) }
+            let additional = (pads.count..<newSize.rawValue).map { Pad(index: $0, colorIndex: $0 % ArcadeTheme.padColors.count) }
             pads.append(contentsOf: additional)
         } else if newSize.rawValue < pads.count {
             pads = Array(pads.prefix(newSize.rawValue))

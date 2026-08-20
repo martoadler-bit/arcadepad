@@ -204,7 +204,7 @@ final class KitStore: ObservableObject {
         var pads: [Pad] = []
         for index in 0..<starter.gridSize.rawValue {
             guard index < starter.pads.count, let bundleURL = starter.pads[index].bundleURL else {
-                pads.append(Pad(index: index, colorIndex: index % 6))
+                pads.append(Pad(index: index, colorIndex: index % ArcadeTheme.padColors.count))
                 continue
             }
             let padDef = starter.pads[index]
@@ -212,7 +212,7 @@ final class KitStore: ObservableObject {
             try? fileManager.copyItem(at: bundleURL, to: destDir.appendingPathComponent(fileName))
             let duration = Self.audioDuration(of: bundleURL)
             let sample = Sample(name: padDef.name, fileName: fileName, duration: duration)
-            pads.append(Pad(index: index, sample: sample, colorIndex: index % 6))
+            pads.append(Pad(index: index, sample: sample, colorIndex: index % ArcadeTheme.padColors.count))
         }
 
         let newKit = Kit(id: newID, name: starter.name, gridSize: starter.gridSize, pads: pads)

@@ -6,17 +6,45 @@ enum JoystickDirection {
     case center, up, down, left, right
 }
 
-/// What the joystick performs while deflected. Applied at the moment a pad is triggered
-/// (like holding a performance-FX modifier key), not continuously to already-sounding pads —
-/// AVAudioEngine can't smoothly rewind a buffer that's already streaming, so "reverse" in
-/// particular only makes sense at trigger time.
-enum JoystickAssignment: String, CaseIterable, Identifiable, Codable {
+/// A fixed, self-contained performance effect a joystick direction can trigger. Each direction
+/// (up/down/left/right) gets its own independent assignment — pushing that direction while
+/// tapping a pad applies exactly this effect to that hit, nothing relative or direction-paired
+/// about it (unlike the earlier single shared "assignment + polarity" design).
+enum JoystickFX: String, CaseIterable, Identifiable, Codable {
     case none = "OFF"
-    case filter = "FILTER"
-    case reverb = "REVERB"
-    case delay = "DELAY"
-    case pitchBend = "BEND"
-    case reverse = "REV"
+    case filterOpen = "FILTER OPEN"
+    case filterClosed = "FILTER CLOSED"
+    case reverbWash = "REVERB"
+    case delayThrow = "DELAY"
+    case pitchUp = "PITCH UP"
+    case pitchDown = "PITCH DOWN"
+    case reverse = "REVERSE"
+    case bitcrush = "BITCRUSH"
 
     var id: String { rawValue }
+
+    /// Applies this fixed effect on top of a pad's own settings — only touches the parameters
+    /// it cares about, leaving everything else at the pad's stored values.
+    func apply(effects: inout EffectSettings, mode: inout PlaybackMode, pitchOffset: inout Double) {
+        switch self {
+        case .none:
+            break
+        case .filterOpen:
+            effects.filterCutoff = 1.0
+        case .filterClosed:
+            effects.filterCutoff = 0.05
+        case .reverbWash:
+            effects.reverbMix = 1.0
+        case .delayThrow:
+            effects.delayMix = 1.0
+        case .pitchUp:
+            pitchOffset = 7
+        case .pitchDown:
+            pitchOffset = -7
+        case .reverse:
+            mode = .reverse
+        case .bitcrush:
+            effects.bitcrushAmount = 1.0
+        }
+    }
 }

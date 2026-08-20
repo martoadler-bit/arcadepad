@@ -13,7 +13,10 @@ struct ContentView: View {
     @State private var showRenamePrompt = false
     @State private var renameText = ""
     @State private var joystickDirection: JoystickDirection = .center
-    @State private var joystickAssignment: JoystickAssignment = Self.lastAssignment
+    @State private var joystickUpFX: JoystickFX = Self.lastFX(.up)
+    @State private var joystickDownFX: JoystickFX = Self.lastFX(.down)
+    @State private var joystickLeftFX: JoystickFX = Self.lastFX(.left)
+    @State private var joystickRightFX: JoystickFX = Self.lastFX(.right)
 
     var body: some View {
         NavigationStack {
@@ -123,17 +126,22 @@ struct ContentView: View {
         if let group = pad.chokeGroup {
             audio.choke(group: group, exceptPadIndex: pad.index, pads: kitStore.kit.pads)
         }
+        var mode = pad.mode
+        var pitchOffset: Double = 0
+        var effects = pad.effects
+        currentJoystickFX.apply(effects: &effects, mode: &mode, pitchOffset: &pitchOffset)
+
         let url = kitStore.sampleURL(for: sample)
         audio.play(
             sample: url,
             padIndex: pad.index,
-            mode: performanceMode(for: pad),
-            pitchSemitones: pad.pitchSemitones + performancePitchOffset,
+            mode: mode,
+            pitchSemitones: pad.pitchSemitones + pitchOffset,
             volume: pad.volume,
             trimStart: sample.trimStart,
             trimEnd: sample.trimEnd
         )
-        audio.applyEffects(performanceEffects(for: pad), toPad: pad.index)
+        audio.applyEffects(effects, toPad: pad.index)
         activePads.insert(pad.index)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
             if pad.mode != .loop {
@@ -144,11 +152,23 @@ struct ContentView: View {
 
     // MARK: Performance joystick
 
-    private static let lastAssignmentKey = "ContentView.lastJoystickAssignment"
+    private static func fxKey(_ direction: JoystickDirection) -> String {
+        "ContentView.joystickFX.\(direction)"
+    }
 
-    private static var lastAssignment: JoystickAssignment {
-        UserDefaults.standard.string(forKey: lastAssignmentKey)
-            .flatMap(JoystickAssignment.init(rawValue:)) ?? .none
+    private static func lastFX(_ direction: JoystickDirection) -> JoystickFX {
+        UserDefaults.standard.string(forKey: fxKey(direction))
+            .flatMap(JoystickFX.init(rawValue:)) ?? .none
+    }
+
+    private var currentJoystickFX: JoystickFX {
+        switch joystickDirection {
+        case .center: return .none
+        case .up: return joystickUpFX
+        case .down: return joystickDownFX
+        case .left: return joystickLeftFX
+        case .right: return joystickRightFX
+        }
     }
 
     private var performanceJoystickBar: some View {
@@ -169,77 +189,51 @@ struct ContentView: View {
                 Spacer()
             }
 
-            // A native segmented Picker — the same reliably-tappable control already used
-            // for the record-source and pad-mode pickers elsewhere in the app — instead of
-            // custom Buttons in a scroll/grid, which turned out not to register taps.
-            Picker("Assignment", selection: $joystickAssignment) {
-                ForEach(JoystickAssignment.allCases) { assignment in
-                    Text(assignment.rawValue).tag(assignment)
+            // Each direction gets its own independent, fixed FX — 4 native menu Pickers
+            // (same reliable UIKit-backed control as the segmented ones used elsewhere).
+            VStack(spacing: 6) {
+                HStack(spacing: 6) {
+                    fxPicker("▲ UP", $joystickUpFX, .up)
+                    fxPicker("▼ DOWN", $joystickDownFX, .down)
+                }
+                HStack(spacing: 6) {
+                    fxPicker("◀ LEFT", $joystickLeftFX, .left)
+                    fxPicker("▶ RIGHT", $joystickRightFX, .right)
                 }
             }
-            .pickerStyle(.segmented)
         }
         .padding(.horizontal)
         .padding(.bottom, 20)
-        .onChange(of: joystickAssignment) { _, newValue in
-            UserDefaults.standard.set(newValue.rawValue, forKey: Self.lastAssignmentKey)
+    }
+
+    private func fxPicker(_ label: String, _ selection: Binding<JoystickFX>, _ direction: JoystickDirection) -> some View {
+        HStack(spacing: 4) {
+            Text(label)
+                .font(.caption2.bold())
+                .foregroundStyle(.white.opacity(0.5))
+            Spacer(minLength: 4)
+            Picker(label, selection: selection) {
+                ForEach(JoystickFX.allCases) { fx in
+                    Text(fx.rawValue).tag(fx)
+                }
+            }
+            .pickerStyle(.menu)
+            .tint(selection.wrappedValue == .none ? .white.opacity(0.6) : ArcadeTheme.marqueeText)
+            .labelsHidden()
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 6)
+        .frame(maxWidth: .infinity)
+        .background(ArcadeTheme.panelBackground)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .onChange(of: selection.wrappedValue) { _, newValue in
+            UserDefaults.standard.set(newValue.rawValue, forKey: Self.fxKey(direction))
         }
     }
 
     private var statusText: String {
-        guard joystickAssignment != .none else { return "Pick a parameter above to arm the joystick." }
-        guard joystickDirection != .center else { return "Hold a direction while you tap a pad." }
-        switch joystickAssignment {
-        case .none:
-            return ""
-        case .filter:
-            let open = joystickDirection == .up || joystickDirection == .right
-            return open ? "FILTER → wide open" : "FILTER → muffled"
-        case .reverb:
-            let wet = joystickDirection == .up || joystickDirection == .right
-            return wet ? "REVERB → full wash" : "REVERB → dry"
-        case .delay:
-            let wet = joystickDirection == .up || joystickDirection == .right
-            return wet ? "DELAY → full echo" : "DELAY → dry"
-        case .pitchBend:
-            let up = joystickDirection == .up || joystickDirection == .right
-            return up ? "PITCH → +7 semitones" : "PITCH → −7 semitones"
-        case .reverse:
-            return "REVERSE → next hit plays backwards"
-        }
-    }
-
-    /// Only "reverse" overrides the pad's own playback mode — the others layer a live effects
-    /// tweak on top without changing how the sample itself is triggered.
-    private func performanceMode(for pad: Pad) -> PlaybackMode {
-        guard joystickAssignment == .reverse, joystickDirection != .center else { return pad.mode }
-        return .reverse
-    }
-
-    private var performancePitchOffset: Double {
-        guard joystickAssignment == .pitchBend else { return 0 }
-        switch joystickDirection {
-        case .up, .right: return 7
-        case .down, .left: return -7
-        case .center: return 0
-        }
-    }
-
-    private func performanceEffects(for pad: Pad) -> EffectSettings {
-        var effects = pad.effects
-        guard joystickDirection != .center else { return effects }
-        let boosted = (joystickDirection == .up || joystickDirection == .right)
-        switch joystickAssignment {
-        case .filter:
-            effects.filterCutoff = boosted ? 1.0 : 0.05
-        case .reverb:
-            effects.reverbMix = boosted ? 1.0 : 0.0
-        case .delay:
-            effects.delayMix = boosted ? 1.0 : 0.0
-        case .none, .pitchBend, .reverse:
-            break
-        }
-        return effects
+        guard joystickDirection != .center else { return "Hold a direction to trigger its FX." }
+        return currentJoystickFX == .none ? "No FX assigned to this direction." : "→ \(currentJoystickFX.rawValue)"
     }
 
     private var gridSizeBinding: Binding<GridSize> {
