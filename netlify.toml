@@ -1,0 +1,7 @@
+[build]
+  base = "web"
+  publish = "."
+  # Skip the build entirely unless something under web/ actually changed —
+  # without this, every push to the repo (including pure-iOS Swift changes)
+  # triggers a full rebuild + redeploy of the static site for nothing.
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- ."
