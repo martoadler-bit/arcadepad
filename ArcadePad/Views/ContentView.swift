@@ -180,7 +180,7 @@ struct ContentView: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("PERFORMANCE").font(.caption2).foregroundStyle(.white.opacity(0.4))
-                    Text(statusText)
+                    Text(LocalizedStringKey(statusText))
                         .font(.caption2.monospaced())
                         .foregroundStyle(joystickDirection == .center ? .white.opacity(0.4) : ArcadeTheme.marqueeText)
                         .animation(.easeOut(duration: 0.1), value: joystickDirection)

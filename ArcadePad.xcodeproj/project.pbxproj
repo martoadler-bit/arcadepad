@@ -32,6 +32,7 @@
 		32238BFCDC6A7719F4E78782 /* airhorn.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7EF47856D5791577406E664A /* airhorn.mp3 */; };
 		329DD9637B077BDDB9ACCD86 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 259DAD813A3B72EA0DF6AAE0 /* Preview Assets.xcassets */; };
 		34BCA182D2B1F00A5BE1A8A4 /* Pattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E73254BC37C58C8F97FE002 /* Pattern.swift */; };
+		3798736235791A541AA0BF63 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 663C6B4B8A2157ABD8F60DAC /* Localizable.xcstrings */; };
 		390BE112619596A7893D4137 /* PadEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5DBF4350D8FE4E69E3ACFB7 /* PadEditorView.swift */; };
 		3BCE6C76A990C26E4BF31807 /* laser.wav in Resources */ = {isa = PBXBuildFile; fileRef = D632DDA375DA5E5606B35468 /* laser.wav */; };
 		3D0F7D583494F9B7748D1791 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4320BC2642058FA597FD979 /* Assets.xcassets */; };
@@ -185,6 +186,7 @@
 		5F7B125D321554D94B8F9BC6 /* duck_quack.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = duck_quack.mp3; sourceTree = "<group>"; };
 		6216F9644F27F8CC949B2D3E /* bass_g2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = bass_g2.wav; sourceTree = "<group>"; };
 		63E5664431573C2E9D32AC8A /* bass_d2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = bass_d2.wav; sourceTree = "<group>"; };
+		663C6B4B8A2157ABD8F60DAC /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		68354F0F711166C47428172F /* DuplicatePadTargetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicatePadTargetView.swift; sourceTree = "<group>"; };
 		72DDAC7B52823C6D526F5328 /* SplitAudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitAudioView.swift; sourceTree = "<group>"; };
 		7864022327BF8C56318461F0 /* StarterKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterKit.swift; sourceTree = "<group>"; };
@@ -315,6 +317,7 @@
 				D4528EBB6AA4D422A7533CE4 /* ArcadePad.entitlements */,
 				3F8F06981EA38414FF2D0740 /* ArcadePadApp.swift */,
 				A4320BC2642058FA597FD979 /* Assets.xcassets */,
+				663C6B4B8A2157ABD8F60DAC /* Localizable.xcstrings */,
 				F55A03AD7DD83F17B9023200 /* Core */,
 				2D85BDDE4B65700D0B102D56 /* Preview Content */,
 				694624299003AEAEE7A46933 /* StarterKits */,
@@ -668,7 +671,15 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				Base,
+				de,
 				en,
+				es,
+				fr,
+				it,
+				ja,
+				ko,
+				"pt-BR",
+				"zh-Hans",
 			);
 			mainGroup = D10114C26C5D4B19FFA3F5A3;
 			minimizedProjectReferenceProxies = 1;
@@ -696,6 +707,7 @@
 				E84CF0167BF180DF3B6B5322 /* Ki.wav in Resources */,
 				E9631204D575DDB9182E6416 /* LICENSE.txt in Resources */,
 				B01BE9BC84B5FCAE131661E7 /* LICENSE_StreamerFX.txt in Resources */,
+				3798736235791A541AA0BF63 /* Localizable.xcstrings in Resources */,
 				18ACA771B06BFF3DD1AF9475 /* Mi.wav in Resources */,
 				4E7F8D07DBAC37A368B78A02 /* Nam.wav in Resources */,
 				329DD9637B077BDDB9ACCD86 /* Preview Assets.xcassets in Resources */,
