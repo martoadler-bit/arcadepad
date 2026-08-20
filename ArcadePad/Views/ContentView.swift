@@ -189,51 +189,45 @@ struct ContentView: View {
                 Spacer()
             }
 
-            // Each direction gets its own independent, fixed FX — 4 native menu Pickers
-            // (same reliable UIKit-backed control as the segmented ones used elsewhere).
-            VStack(spacing: 6) {
-                HStack(spacing: 6) {
-                    fxPicker("▲ UP", $joystickUpFX, .up)
-                    fxPicker("▼ DOWN", $joystickDownFX, .down)
-                }
-                HStack(spacing: 6) {
-                    fxPicker("◀ LEFT", $joystickLeftFX, .left)
-                    fxPicker("▶ RIGHT", $joystickRightFX, .right)
+            // One picker, always showing the FX for whichever direction is currently held —
+            // hold the joystick with one finger and tap here with the other to assign it.
+            Picker("FX", selection: currentDirectionFXBinding) {
+                ForEach(JoystickFX.allCases) { fx in
+                    Text(fx.shortLabel).tag(fx)
                 }
             }
+            .pickerStyle(.segmented)
+            .disabled(joystickDirection == .center)
+            .opacity(joystickDirection == .center ? 0.4 : 1)
+
+            Text("Hold the joystick in a direction, then pick its FX here — each of the 4 directions keeps its own.")
+                .font(.caption2)
+                .foregroundStyle(.white.opacity(0.4))
+                .fixedSize(horizontal: false, vertical: true)
         }
         .padding(.horizontal)
         .padding(.bottom, 20)
     }
 
-    private func fxPicker(_ label: String, _ selection: Binding<JoystickFX>, _ direction: JoystickDirection) -> some View {
-        HStack(spacing: 4) {
-            Text(label)
-                .font(.caption2.bold())
-                .foregroundStyle(.white.opacity(0.5))
-            Spacer(minLength: 4)
-            Picker(label, selection: selection) {
-                ForEach(JoystickFX.allCases) { fx in
-                    Text(fx.rawValue).tag(fx)
+    private var currentDirectionFXBinding: Binding<JoystickFX> {
+        Binding(
+            get: { currentJoystickFX },
+            set: { newValue in
+                switch joystickDirection {
+                case .center: break
+                case .up: joystickUpFX = newValue
+                case .down: joystickDownFX = newValue
+                case .left: joystickLeftFX = newValue
+                case .right: joystickRightFX = newValue
                 }
+                UserDefaults.standard.set(newValue.rawValue, forKey: Self.fxKey(joystickDirection))
             }
-            .pickerStyle(.menu)
-            .tint(selection.wrappedValue == .none ? .white.opacity(0.6) : ArcadeTheme.marqueeText)
-            .labelsHidden()
-        }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 6)
-        .frame(maxWidth: .infinity)
-        .background(ArcadeTheme.panelBackground)
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .onChange(of: selection.wrappedValue) { _, newValue in
-            UserDefaults.standard.set(newValue.rawValue, forKey: Self.fxKey(direction))
-        }
+        )
     }
 
     private var statusText: String {
-        guard joystickDirection != .center else { return "Hold a direction to trigger its FX." }
-        return currentJoystickFX == .none ? "No FX assigned to this direction." : "→ \(currentJoystickFX.rawValue)"
+        guard joystickDirection != .center else { return "Hold a direction to edit or trigger its FX." }
+        return currentJoystickFX == .none ? "No FX assigned — pick one below." : "→ \(currentJoystickFX.rawValue)"
     }
 
     private var gridSizeBinding: Binding<GridSize> {
