@@ -26,21 +26,24 @@ struct ContentView: View {
                     header
 
                     if showSequencer {
+                        // The step grid needs the room, and each row already shows its pad's
+                        // color thumbnail — showing the full pad grid at the same time was
+                        // squeezing the sequencer down to a sliver, so it's hidden while open.
                         SequencerView(onStepTriggered: trigger)
                             .environmentObject(kitStore)
                             .transition(.move(edge: .top).combined(with: .opacity))
-                    }
-
-                    ScrollView {
-                        PadGridView(
-                            pads: kitStore.kit.pads,
-                            columns: kitStore.kit.gridSize.columns,
-                            activePadIndices: activePads,
-                            onTrigger: trigger,
-                            onLongPress: { pad in editingPadIndex = pad.index }
-                        )
-                        .padding(.horizontal)
-                        .padding(.bottom, 24)
+                    } else {
+                        ScrollView {
+                            PadGridView(
+                                pads: kitStore.kit.pads,
+                                columns: kitStore.kit.gridSize.columns,
+                                activePadIndices: activePads,
+                                onTrigger: trigger,
+                                onLongPress: { pad in editingPadIndex = pad.index }
+                            )
+                            .padding(.horizontal)
+                            .padding(.bottom, 24)
+                        }
                     }
 
                     performanceJoystickBar
