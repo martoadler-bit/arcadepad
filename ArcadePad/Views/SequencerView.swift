@@ -5,9 +5,15 @@ struct SequencerView: View {
     @StateObject private var sequencer = SequencerEngine()
     let onStepTriggered: (Pad) -> Void
 
+    @State private var exportLoopCount = 4
+    @State private var isExporting = false
+    @State private var exportedURL: URL?
+    @State private var exportError: String?
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             transport
+            exportRow
 
             ScrollView(.vertical) {
                 VStack(spacing: 6) {
@@ -50,6 +56,69 @@ struct SequencerView: View {
             VStack(alignment: .leading) {
                 Text("SWING \(Int(kitStore.kit.pattern.swing * 100))%").font(.caption2)
                 Slider(value: $kitStore.kit.pattern.swing, in: 0...1)
+            }
+        }
+    }
+
+    private var exportRow: some View {
+        HStack(spacing: 10) {
+            Stepper("LOOPS: \(exportLoopCount)", value: $exportLoopCount, in: 1...16)
+                .font(.caption2)
+                .fixedSize()
+
+            if isExporting {
+                ProgressView()
+                    .controlSize(.small)
+                    .frame(width: 90, height: 36)
+            } else if let exportedURL {
+                ShareLink(item: exportedURL) {
+                    Text("SHARE ▸")
+                        .font(ArcadeTheme.labelFont)
+                        .frame(width: 90, height: 36)
+                }
+                .buttonStyle(ArcadeButtonStyle(color: ArcadeTheme.padColor(5)))
+                .simultaneousGesture(TapGesture().onEnded { self.exportedURL = nil })
+            } else {
+                Button {
+                    exportSequence()
+                } label: {
+                    Text("EXPORT")
+                        .font(ArcadeTheme.labelFont)
+                        .frame(width: 90, height: 36)
+                }
+                .buttonStyle(ArcadeButtonStyle(color: ArcadeTheme.padColor(6)))
+            }
+
+            if let exportError {
+                Text(exportError)
+                    .font(.caption2)
+                    .foregroundStyle(.red)
+                    .lineLimit(2)
+            }
+
+            Spacer()
+        }
+    }
+
+    private func exportSequence() {
+        exportError = nil
+        exportedURL = nil
+        isExporting = true
+        let kit = kitStore.kit
+        let store = kitStore
+        let loops = exportLoopCount
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                let url = try SequencerExporter.export(kit: kit, kitStore: store, loopCount: loops)
+                DispatchQueue.main.async {
+                    isExporting = false
+                    exportedURL = url
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    isExporting = false
+                    exportError = error.localizedDescription
+                }
             }
         }
     }

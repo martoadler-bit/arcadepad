@@ -69,6 +69,7 @@
 		7DF9310DBF47390913791918 /* bass_c2.wav in Resources */ = {isa = PBXBuildFile; fileRef = B6677479D3FB3F6BF50FC1A4 /* bass_c2.wav */; };
 		7E09E20145FD4302F07FBF68 /* click.wav in Resources */ = {isa = PBXBuildFile; fileRef = D18F8320A6B8A0920AFB3CED /* click.wav */; };
 		85A11F2D7B0B87099AA3CB34 /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39839F0CFA3AF013E51046F9 /* Sample.swift */; };
+		86C5EE387EAE3190FBD3D822 /* SequencerExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0303F03C4B9897A34876975B /* SequencerExporter.swift */; };
 		8E2B0E69213628C905ABF63A /* kick.wav in Resources */ = {isa = PBXBuildFile; fileRef = ADD0FF4154FB5FD3B4E978D8 /* kick.wav */; };
 		8E3F7A0FDD3BA80A1BB4A5AB /* duck_quack.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5F7B125D321554D94B8F9BC6 /* duck_quack.mp3 */; };
 		8F3489C186FC8EC8BC60387B /* PadButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9004B69246E160A7E58BFC /* PadButtonView.swift */; };
@@ -151,6 +152,7 @@
 /* Begin PBXFileReference section */
 		008BB52310634EDDD66D6A3A /* JoystickView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoystickView.swift; sourceTree = "<group>"; };
 		01514AD530384FEEC3F9FB4E /* bell_c5.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = bell_c5.wav; sourceTree = "<group>"; };
+		0303F03C4B9897A34876975B /* SequencerExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequencerExporter.swift; sourceTree = "<group>"; };
 		058A335933E6211369407475 /* tom.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = tom.wav; sourceTree = "<group>"; };
 		05993F313377C100EB168A50 /* shaker.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = shaker.wav; sourceTree = "<group>"; };
 		0740A1FCB501778B89322DBB /* BroadcastRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BroadcastRecorder.swift; sourceTree = "<group>"; };
@@ -264,6 +266,7 @@
 			children = (
 				0C505A7ADE905751F28EE583 /* AudioEngine.swift */,
 				0740A1FCB501778B89322DBB /* BroadcastRecorder.swift */,
+				0303F03C4B9897A34876975B /* SequencerExporter.swift */,
 				486970E16BC1045E112746CB /* TransientDetector.swift */,
 				C69B7BAA0E58E1491ACC295A /* WaveformLoader.swift */,
 			);
@@ -807,6 +810,7 @@
 				58380C82A15E2273C4C26E81 /* RecordView.swift in Sources */,
 				85A11F2D7B0B87099AA3CB34 /* Sample.swift in Sources */,
 				FA82C36412C0BA32F484D5CB /* SequencerEngine.swift in Sources */,
+				86C5EE387EAE3190FBD3D822 /* SequencerExporter.swift in Sources */,
 				188E6B6FA094D1AF35E0271D /* SequencerView.swift in Sources */,
 				1CDC8EBAC67A339912CB549A /* ShareKitView.swift in Sources */,
 				D1A68A95C6BF629F52C12FDF /* ShareService.swift in Sources */,
