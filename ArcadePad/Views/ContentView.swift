@@ -189,14 +189,32 @@ struct ContentView: View {
                 Spacer()
             }
 
-            // One picker, always showing the FX for whichever direction is currently held —
-            // hold the joystick with one finger and tap here with the other to assign it.
-            Picker("FX", selection: currentDirectionFXBinding) {
-                ForEach(JoystickFX.allCases) { fx in
-                    Text(fx.shortLabel).tag(fx)
+            // One horizontally-scrolling row of full-name chips, always showing the FX for
+            // whichever direction is currently held — hold the joystick with one finger and
+            // tap a chip with the other to assign it there.
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 6) {
+                    ForEach(JoystickFX.allCases) { fx in
+                        Button {
+                            currentDirectionFXBinding.wrappedValue = fx
+                        } label: {
+                            Text(fx.rawValue)
+                                .font(.caption2.bold())
+                                .lineLimit(1)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .background(
+                                    Capsule().fill(
+                                        fx == currentJoystickFX ? ArcadeTheme.marqueeText : ArcadeTheme.panelBackground
+                                    )
+                                )
+                                .foregroundStyle(fx == currentJoystickFX ? .black : .white.opacity(0.7))
+                                .contentShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                    }
                 }
             }
-            .pickerStyle(.segmented)
             .disabled(joystickDirection == .center)
             .opacity(joystickDirection == .center ? 0.4 : 1)
 

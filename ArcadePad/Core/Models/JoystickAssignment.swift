@@ -23,22 +23,6 @@ enum JoystickFX: String, CaseIterable, Identifiable, Codable {
 
     var id: String { rawValue }
 
-    /// Short enough for all 9 to fit in one segmented control; `rawValue` (the full name) is
-    /// used anywhere there's room for it, like the "→ FILTER OPEN" status line.
-    var shortLabel: String {
-        switch self {
-        case .none: return "OFF"
-        case .filterOpen: return "OPEN"
-        case .filterClosed: return "CLOSE"
-        case .reverbWash: return "VERB"
-        case .delayThrow: return "DLY"
-        case .pitchUp: return "P.UP"
-        case .pitchDown: return "P.DN"
-        case .reverse: return "REV"
-        case .bitcrush: return "CRSH"
-        }
-    }
-
     /// Applies this fixed effect on top of a pad's own settings — only touches the parameters
     /// it cares about, leaving everything else at the pad's stored values.
     func apply(effects: inout EffectSettings, mode: inout PlaybackMode, pitchOffset: inout Double) {
