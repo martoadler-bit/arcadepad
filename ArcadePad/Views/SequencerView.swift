@@ -65,6 +65,7 @@ struct SequencerView: View {
             Stepper("LOOPS: \(exportLoopCount)", value: $exportLoopCount, in: 1...16)
                 .font(.caption2)
                 .fixedSize()
+                .onChange(of: exportLoopCount) { _, _ in exportedURL = nil }
 
             if isExporting {
                 ProgressView()
@@ -77,7 +78,6 @@ struct SequencerView: View {
                         .frame(width: 90, height: 36)
                 }
                 .buttonStyle(ArcadeButtonStyle(color: ArcadeTheme.padColor(5)))
-                .simultaneousGesture(TapGesture().onEnded { self.exportedURL = nil })
             } else {
                 Button {
                     exportSequence()
